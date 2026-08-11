@@ -163,3 +163,88 @@ export async function addUnemploymentLog(entry: UnemploymentLogEntry): Promise<U
   }
   return updated;
 }
+
+const USER_CONFIG_STORAGE_KEY = 'openapply_user_config';
+
+/**
+ * Retrieves the full OpenApplyUserConfig from storage.
+ * Automatically decrypts the AI API key if encrypted and ensures an anonymous clientId exists.
+ * @returns Promise resolving to OpenApplyUserConfig
+ */
+export async function getUserConfig(): Promise<import('@openapply/shared-types').OpenApplyUserConfig> {
+  const { DEFAULT_USER_CONFIG } = await import('@openapply/shared-types');
+  const { CryptoVaultService } = await import('../infrastructure/security/CryptoVaultService');
+
+  let rawConfig: any = null;
+
+  if (typeof chrome !== 'undefined' && chrome.storage && chrome.storage.local) {
+    rawConfig = await new Promise((resolve) => {
+      chrome.storage.local.get(['userConfig'], (res: any) => {
+        resolve(res.userConfig || null);
+      });
+    });
+  } else {
+    const raw = localStorage.getItem(USER_CONFIG_STORAGE_KEY);
+    if (raw) {
+      try {
+        rawConfig = JSON.parse(raw);
+      } catch {
+        rawConfig = null;
+      }
+    }
+  }
+
+  const mergedConfig: import('@openapply/shared-types').OpenApplyUserConfig = {
+    onboardingCompleted: rawConfig?.onboardingCompleted ?? DEFAULT_USER_CONFIG.onboardingCompleted,
+    preferences: {
+      hidePromotedJobs: rawConfig?.preferences?.hidePromotedJobs ?? DEFAULT_USER_CONFIG.preferences.hidePromotedJobs,
+      hideHighApplicantJobs:
+        rawConfig?.preferences?.hideHighApplicantJobs ?? DEFAULT_USER_CONFIG.preferences.hideHighApplicantJobs,
+      maxApplicantThreshold:
+        rawConfig?.preferences?.maxApplicantThreshold ?? DEFAULT_USER_CONFIG.preferences.maxApplicantThreshold
+    },
+    aiProvider: {
+      providerId: rawConfig?.aiProvider?.providerId ?? DEFAULT_USER_CONFIG.aiProvider.providerId,
+      apiKey: rawConfig?.aiProvider?.apiKey ?? DEFAULT_USER_CONFIG.aiProvider.apiKey,
+      isValidated: rawConfig?.aiProvider?.isValidated ?? DEFAULT_USER_CONFIG.aiProvider.isValidated
+    },
+    analytics: {
+      optIn: rawConfig?.analytics?.optIn ?? DEFAULT_USER_CONFIG.analytics.optIn,
+      clientId:
+        rawConfig?.analytics?.clientId ||
+        (typeof crypto !== 'undefined' && crypto.randomUUID
+          ? crypto.randomUUID()
+          : 'anon-' + Math.random().toString(36).substring(2))
+    }
+  };
+
+  if (mergedConfig.aiProvider.apiKey) {
+    try {
+      mergedConfig.aiProvider.apiKey = await CryptoVaultService.decrypt(mergedConfig.aiProvider.apiKey);
+    } catch {
+      mergedConfig.aiProvider.apiKey = mergedConfig.aiProvider.apiKey;
+    }
+  }
+
+  return mergedConfig;
+}
+
+/**
+ * Saves the OpenApplyUserConfig to storage.
+ * Automatically encrypts the AI provider API key using AES-256 Web Crypto before writing to disk.
+ * @param config - OpenApplyUserConfig object to persist
+ */
+export async function saveUserConfig(config: import('@openapply/shared-types').OpenApplyUserConfig): Promise<void> {
+  const { CryptoVaultService } = await import('../infrastructure/security/CryptoVaultService');
+
+  const configToSave = JSON.parse(JSON.stringify(config));
+  if (configToSave.aiProvider.apiKey) {
+    configToSave.aiProvider.apiKey = await CryptoVaultService.encrypt(configToSave.aiProvider.apiKey);
+  }
+
+  if (typeof chrome !== 'undefined' && chrome.storage && chrome.storage.local) {
+    chrome.storage.local.set({ userConfig: configToSave });
+  } else {
+    localStorage.setItem(USER_CONFIG_STORAGE_KEY, JSON.stringify(configToSave));
+  }
+}

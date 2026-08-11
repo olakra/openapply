@@ -124,7 +124,50 @@ export interface OpenApplySettings {
  */
 export interface ChromeStorageData {
   settings?: OpenApplySettings;
+  userConfig?: OpenApplyUserConfig;
   resume?: UserResume;
   unemploymentLogs?: UnemploymentLogEntry[];
   scorecards?: Record<string, JobScorecard>;
 }
+
+/**
+ * First-time onboarding, preferences, BYOK, and analytics configuration schema.
+ */
+export interface OpenApplyUserConfig {
+  onboardingCompleted: boolean;
+  preferences: {
+    hidePromotedJobs: boolean;
+    hideHighApplicantJobs: boolean;
+    maxApplicantThreshold: number;
+  };
+  aiProvider: {
+    providerId: 'openai';
+    apiKey: string;
+    isValidated: boolean;
+  };
+  analytics: {
+    optIn: boolean;
+    clientId: string;
+  };
+}
+
+/**
+ * Default fallback user configuration values.
+ */
+export const DEFAULT_USER_CONFIG: OpenApplyUserConfig = {
+  onboardingCompleted: false,
+  preferences: {
+    hidePromotedJobs: true,
+    hideHighApplicantJobs: true,
+    maxApplicantThreshold: 50
+  },
+  aiProvider: {
+    providerId: 'openai',
+    apiKey: '',
+    isValidated: false
+  },
+  analytics: {
+    optIn: false,
+    clientId: ''
+  }
+};
