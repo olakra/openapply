@@ -1,0 +1,93 @@
+name: Version & Release Synchronization
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'VERSION'
+      - 'CHANGELOG.md'
+      - '.github/workflows/version-release-sync.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  version-release-sync:
+    name: Sync Release Tag & Publish
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Read Target Semantic Version
+        id: get_version
+        run: |
+          VERSION=$(cat VERSION | tr -d '\r\n[:space:]')
+          echo "CURRENT_VERSION=${VERSION}" >> $GITHUB_OUTPUT
+          echo "Target version from VERSION file: ${VERSION}"
+
+      - name: Check if Tag Already Exists
+        id: check_tag
+        run: |
+          TAG_NAME="v${{ steps.get_version.outputs.CURRENT_VERSION }}"
+          if git rev-parse "$TAG_NAME" >/dev/null 2>&1; then
+            echo "TAG_EXISTS=true" >> $GITHUB_OUTPUT
+            echo "Git tag $TAG_NAME already exists. Skipping release generation."
+          else
+            echo "TAG_EXISTS=false" >> $GITHUB_OUTPUT
+            echo "Git tag $TAG_NAME does not exist yet."
+          fi
+
+      - name: Validate CHANGELOG.md Entry
+        if: steps.check_tag.outputs.TAG_EXISTS == 'false'
+        run: |
+          VERSION="${{ steps.get_version.outputs.CURRENT_VERSION }}"
+          if ! grep -q "\[$VERSION\]" CHANGELOG.md; then
+            echo "::error::CHANGELOG.md does not contain an entry for version [$VERSION]!"
+            exit 1
+          fi
+          echo "Successfully verified CHANGELOG.md entry for version [$VERSION]."
+
+      - name: Extract Release Notes from CHANGELOG
+        if: steps.check_tag.outputs.TAG_EXISTS == 'false'
+        id: extract_changelog
+        run: |
+          VERSION="${{ steps.get_version.outputs.CURRENT_VERSION }}"
+          # Extract section under ## [VERSION] up to next ## header
+          python3 -c "
+          import re
+          with open('CHANGELOG.md', 'r') as f:
+              content = f.read()
+          pattern = r'## \[' + re.escape('$VERSION') + r'\][^\n]*\n(.*?)((?=\n## )|\Z)'
+          match = re.search(pattern, content, re.DOTALL)
+          notes = match.group(1).strip() if match else 'Release v' + '$VERSION'
+          with open('release_notes.md', 'w') as out:
+              out.write(notes)
+          "
+          echo "Extracted release notes:"
+          cat release_notes.md
+
+      - name: Create Git Tag and Tag Release
+        if: steps.check_tag.outputs.TAG_EXISTS == 'false'
+        run: |
+          TAG_NAME="v${{ steps.get_version.outputs.CURRENT_VERSION }}"
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git tag -a "$TAG_NAME" -m "Release $TAG_NAME"
+          git push origin "$TAG_NAME"
+
+      - name: Create GitHub Release
+        if: steps.check_tag.outputs.TAG_EXISTS == 'false'
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: "v${{ steps.get_version.outputs.CURRENT_VERSION }}"
+          name: "OpenApply v${{ steps.get_version.outputs.CURRENT_VERSION }}"
+          body_path: release_notes.md
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
