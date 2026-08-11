@@ -6,7 +6,7 @@ hero:
   text: "The Open-Source, Privacy-First LinkedIn Copilot"
   tagline: "Filter ghost jobs, generate tailored ATS cover letters using your own API keys, and automatically track state unemployment work-search logs—100% locally."
   image:
-    src: /logo.svg
+    src: /logo.png
     alt: OpenApply Logo
   actions:
     - theme: brand

@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="assets/logo.png" width="160" alt="OpenApply Logo" />
+</p>
+
 # OpenApply 🛡️
 
 > **The Open-Source, Privacy-First LinkedIn Copilot & Automated State Unemployment Work-Search Engine**
