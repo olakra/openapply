@@ -41,34 +41,47 @@ export interface LinkedInDomJob {
   url: string;
 }
 
+import { FilterFeedbackBadge } from './components/FilterFeedbackBadge';
+
 /**
  * DOM Filtering engine for auto-dimming promoted and high-applicant job listings.
  */
 export class LinkedInJobFilterEngine {
   private autoFilterPromoted: boolean = true;
-  private maxApplicantThreshold: number = 100;
+  private maxApplicantThreshold: number = 50;
+  private hardHideMode: boolean = false;
+  private badge: FilterFeedbackBadge | null = null;
 
   constructor() {
+    if (typeof window !== 'undefined' && typeof document !== 'undefined') {
+      this.badge = new FilterFeedbackBadge((hardHide) => {
+        this.hardHideMode = hardHide;
+        this.processJobListings();
+      });
+    }
     this.initStorageListener();
     this.observeJobBoard();
   }
 
   private async initStorageListener() {
     if (typeof chrome !== 'undefined' && chrome.storage && chrome.storage.local) {
-      chrome.storage.local.get(['settings'], (result: any) => {
-        if (result.settings) {
+      chrome.storage.local.get(['userConfig', 'settings'], (result: any) => {
+        if (result.userConfig) {
+          this.autoFilterPromoted = result.userConfig.preferences?.hidePromotedJobs ?? true;
+          this.maxApplicantThreshold = result.userConfig.preferences?.maxApplicantThreshold ?? 50;
+        } else if (result.settings) {
           this.autoFilterPromoted = result.settings.autoFilterPromoted ?? true;
-          this.maxApplicantThreshold = result.settings.maxApplicantThreshold ?? 100;
-          this.processJobListings();
+          this.maxApplicantThreshold = result.settings.maxApplicantThreshold ?? 50;
         }
+        this.processJobListings();
       });
 
       chrome.storage.onChanged.addListener((changes: any) => {
-        if (changes.settings) {
-          const newSettings = changes.settings.newValue;
-          if (newSettings) {
-            this.autoFilterPromoted = newSettings.autoFilterPromoted;
-            this.maxApplicantThreshold = newSettings.maxApplicantThreshold;
+        if (changes.userConfig) {
+          const cfg = changes.userConfig.newValue;
+          if (cfg?.preferences) {
+            this.autoFilterPromoted = cfg.preferences.hidePromotedJobs ?? true;
+            this.maxApplicantThreshold = cfg.preferences.maxApplicantThreshold ?? 50;
             this.processJobListings();
           }
         }
@@ -136,6 +149,9 @@ export class LinkedInJobFilterEngine {
       '.job-card-container, .jobs-search-results__list-item, li.jobs-search-results__list-item'
     );
 
+    let promotedHidden = 0;
+    let highApplicantHidden = 0;
+
     for (const card of Array.from(cards)) {
       const parsed = this.parseJobCard(card);
       if (!parsed) continue;
@@ -144,9 +160,11 @@ export class LinkedInJobFilterEngine {
 
       let shouldDim = false;
       let dimReason = '';
+      let isPromotedReason = false;
 
       if (this.autoFilterPromoted && parsed.isPromoted) {
         shouldDim = true;
+        isPromotedReason = true;
         dimReason = 'Promoted Listing Filtered by OpenApply';
       } else if (parsed.applicantCount > this.maxApplicantThreshold) {
         shouldDim = true;
@@ -154,25 +172,45 @@ export class LinkedInJobFilterEngine {
       }
 
       if (shouldDim) {
-        card.style.opacity = '0.35';
-        card.style.filter = 'grayscale(80%)';
-        card.setAttribute('data-openapply-dimmed', 'true');
-        card.setAttribute('title', `[OpenApply] ${dimReason}`);
+        if (isPromotedReason) {
+          promotedHidden++;
+        } else {
+          highApplicantHidden++;
+        }
 
-        if (!card.querySelector('.openapply-dim-badge')) {
-          const badge = document.createElement('div');
-          badge.className = 'openapply-dim-badge';
-          badge.style.cssText =
-            'background: rgba(239, 68, 68, 0.15); color: #dc2626; font-size: 11px; padding: 2px 6px; border-radius: 4px; font-weight: 600; margin-top: 4px; display: inline-block;';
-          badge.innerText = `🛡️ OpenApply Dimmed: ${dimReason}`;
-          card.appendChild(badge);
+        if (this.hardHideMode) {
+          card.style.display = 'none';
+        } else {
+          card.style.display = '';
+          card.style.opacity = '0.35';
+          card.style.filter = 'grayscale(80%)';
+          card.setAttribute('data-openapply-dimmed', 'true');
+          card.setAttribute('title', `[OpenApply] ${dimReason}`);
+
+          if (!card.querySelector('.openapply-dim-badge')) {
+            const badge = document.createElement('div');
+            badge.className = 'openapply-dim-badge';
+            badge.style.cssText =
+              'background: rgba(239, 68, 68, 0.15); color: #dc2626; font-size: 11px; padding: 2px 6px; border-radius: 4px; font-weight: 600; margin-top: 4px; display: inline-block;';
+            badge.innerText = `🛡️ OpenApply Dimmed: ${dimReason}`;
+            card.appendChild(badge);
+          }
         }
       } else {
+        card.style.display = '';
         card.style.opacity = '1';
         card.style.filter = 'none';
         const badge = card.querySelector('.openapply-dim-badge');
         if (badge) badge.remove();
       }
+    }
+
+    if (this.badge) {
+      this.badge.updateStats({
+        promotedHidden,
+        highApplicantHidden,
+        totalHidden: promotedHidden + highApplicantHidden
+      });
     }
   }
 
