@@ -1,0 +1,63 @@
+name: Verify Commit GPG/SSH Signatures
+
+on:
+  pull_request:
+    types:
+      - opened
+      - synchronize
+      - reopened
+    branches:
+      - main
+      - develop
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pull-requests: read
+
+jobs:
+  verify-signatures:
+    name: Verify GPG/SSH Commit Signatures
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Inspect & Validate Commit Signatures
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { data: commits } = await github.rest.pulls.listCommits({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: context.payload.pull_request.number,
+            });
+
+            console.log(`Checking ${commits.length} commit(s) on PR #${context.payload.pull_request.number}...`);
+
+            let unsignedCount = 0;
+            for (const commit of commits) {
+              const sha = commit.sha.substring(0, 7);
+              const verification = commit.commit.verification;
+              const isVerified = verification && verification.verified;
+
+              if (isVerified) {
+                console.log(`✅ Commit ${sha} is verified signed (${verification.reason}).`);
+              } else {
+                console.error(`❌ Commit ${sha} is NOT verified! Reason: ${verification ? verification.reason : 'unsigned'}`);
+                unsignedCount++;
+              }
+            }
+
+            if (unsignedCount > 0) {
+              core.setFailed(`Security Policy Failure: ${unsignedCount} commit(s) lack a verified GPG/SSH signature!`);
+            } else {
+              console.log('🎉 All commits are cryptographically verified.');
+            }
+
+            if (commits.length > 1) {
+              console.log(`ℹ️ PR contains ${commits.length} commits. GitHub squash-merge policy will squash these into 1 single signed commit upon merge.`);
+            }
