@@ -19,7 +19,8 @@
     "build:docs": "vitepress build apps/docs",
     "preview": "vite preview",
     "clean": "rm -rf dist apps/*/dist packages/*/dist",
-    "lint": "tsc --noEmit"
+    "lint": "npm run lint --workspaces --if-present",
+    "test:coverage": "npm run test:coverage --workspaces --if-present"
   },
   "dependencies": {
     "@google/genai": "^2.4.0",
