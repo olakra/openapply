@@ -1,7 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { Shield, Key, FileText, HardDrive, Filter, CheckCircle2, AlertTriangle, ExternalLink, RefreshCw, Zap } from 'lucide-react';
-import { OpenApplySettings, UnemploymentLogEntry } from '@openapply/shared-types';
+import { Shield, Key, FileText, HardDrive, Filter, CheckCircle2 } from 'lucide-react';
+import { OpenApplySettings } from '@openapply/shared-types';
 
+/**
+ * Extension popup user interface component for BYOK configuration and filter management.
+ * @returns React element rendering extension popup view
+ */
 export function OpenApplyPopupUI() {
   const [settings, setSettings] = useState<OpenApplySettings>({
     apiKey: '',
@@ -20,7 +24,6 @@ export function OpenApplyPopupUI() {
   const [isKeyVisible, setIsKeyVisible] = useState<boolean>(false);
 
   useEffect(() => {
-    // Read from chrome.storage.local or localStorage
     if (typeof chrome !== 'undefined' && chrome.storage && chrome.storage.local) {
       chrome.storage.local.get(['settings', 'unemploymentLogs'], (res: any) => {
         if (res.settings) setSettings(res.settings);
@@ -52,7 +55,6 @@ export function OpenApplyPopupUI() {
 
   return (
     <div className="w-[380px] bg-white text-slate-900 p-4 font-sans select-none border border-slate-200 rounded-xl shadow-lg">
-      {/* Header */}
       <div className="flex items-center justify-between pb-3 mb-3 border-b border-slate-200">
         <div className="flex items-center space-x-2">
           <div className="w-8 h-8 rounded-lg overflow-hidden flex items-center justify-center shadow-xs bg-slate-900">
@@ -60,7 +62,10 @@ export function OpenApplyPopupUI() {
           </div>
           <div>
             <h1 className="text-base font-bold text-slate-900 tracking-tight flex items-center gap-1.5">
-              OpenApply <span className="text-[10px] uppercase tracking-wider px-1.5 py-0.5 rounded bg-emerald-50 text-emerald-700 border border-emerald-200 font-mono font-semibold">v1.0 MV3</span>
+              OpenApply{' '}
+              <span className="text-[10px] uppercase tracking-wider px-1.5 py-0.5 rounded bg-emerald-50 text-emerald-700 border border-emerald-200 font-mono font-semibold">
+                v1.0 MV3
+              </span>
             </h1>
             <p className="text-[11px] text-slate-500">BYOK Privacy-First LinkedIn Copilot</p>
           </div>
@@ -73,9 +78,7 @@ export function OpenApplyPopupUI() {
         </div>
       </div>
 
-      {/* Main Form Settings */}
       <div className="space-y-3">
-        {/* OpenAI Key Input */}
         <div className="p-3 bg-slate-50 rounded-lg border border-slate-200">
           <label className="block text-xs font-semibold text-slate-700 mb-1 flex items-center justify-between">
             <span className="flex items-center gap-1.5">
@@ -96,18 +99,20 @@ export function OpenApplyPopupUI() {
             className="w-full px-2.5 py-1.5 text-xs bg-white border border-slate-200 rounded text-slate-900 placeholder-slate-400 focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 font-mono"
           />
           <p className="mt-1 text-[10px] text-slate-500 flex items-center gap-1">
-            <Shield className="w-3 h-3 text-emerald-600 inline shrink-0" /> Stored locally in browser. Never sent to external servers.
+            <Shield className="w-3 h-3 text-emerald-600 inline shrink-0" /> Stored locally in browser. Never sent to
+            external servers.
           </p>
         </div>
 
-        {/* Filters Toggles */}
         <div className="p-3 bg-slate-50 rounded-lg border border-slate-200 space-y-2.5">
           <div className="text-xs font-semibold text-slate-700 flex items-center gap-1.5 mb-1">
             <Filter className="w-3.5 h-3.5 text-indigo-600" /> LinkedIn Smart Filters
           </div>
 
           <label className="flex items-center justify-between cursor-pointer group">
-            <span className="text-xs text-slate-700 group-hover:text-slate-900 transition font-medium">Filter Promoted Listings</span>
+            <span className="text-xs text-slate-700 group-hover:text-slate-900 transition font-medium">
+              Filter Promoted Listings
+            </span>
             <input
               type="checkbox"
               checked={settings.autoFilterPromoted}
@@ -130,11 +135,12 @@ export function OpenApplyPopupUI() {
               onChange={(e) => saveSettings({ ...settings, maxApplicantThreshold: parseInt(e.target.value, 10) })}
               className="w-full accent-emerald-600 h-1.5 bg-slate-200 rounded-lg cursor-pointer"
             />
-            <p className="text-[10px] text-slate-500 mt-0.5">Dims job cards with more than {settings.maxApplicantThreshold} applicants.</p>
+            <p className="text-[10px] text-slate-500 mt-0.5">
+              Dims job cards with more than {settings.maxApplicantThreshold} applicants.
+            </p>
           </div>
         </div>
 
-        {/* Google Drive Unemployment Log Sync */}
         <div className="p-3 bg-slate-50 rounded-lg border border-slate-200 space-y-2">
           <div className="flex items-center justify-between">
             <span className="text-xs font-semibold text-slate-700 flex items-center gap-1.5">
@@ -163,16 +169,18 @@ export function OpenApplyPopupUI() {
             />
           </label>
           <p className="text-[10px] text-slate-500">
-            Automatically appends application proof & confirmation hashes to your personal Google Sheet for state unemployment compliance audit readiness.
+            Automatically appends application proof & confirmation hashes to your personal Google Sheet for state
+            unemployment compliance audit readiness.
           </p>
         </div>
       </div>
 
-      {/* Footer info & saved notification */}
       <div className="mt-3 pt-2.5 border-t border-slate-200 flex items-center justify-between text-[11px] text-slate-500">
         <div className="flex items-center space-x-1.5">
           <FileText className="w-3.5 h-3.5 text-slate-400" />
-          <span>Logged Applications: <strong className="text-slate-800">{recentLogsCount}</strong></span>
+          <span>
+            Logged Applications: <strong className="text-slate-800">{recentLogsCount}</strong>
+          </span>
         </div>
         {savedStatus ? (
           <span className="text-emerald-700 font-bold text-[10px] flex items-center gap-1">

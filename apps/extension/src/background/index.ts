@@ -6,10 +6,8 @@
 import { OpenApplySettings, UnemploymentLogEntry, JobScorecard, LinkedInJobPosting } from '@openapply/shared-types';
 import { generateAtsScorecardPrompt, generateCoverLetterPrompt, SYSTEM_INSTRUCTIONS } from '@openapply/prompt-engine';
 
-// Listener for runtime messages from Popup UI or Content Scripts
 chrome.runtime.onInstalled.addListener(() => {
   console.log('[OpenApply] Extension installed cleanly.');
-  // Initialize default local settings if empty
   chrome.storage.local.get(['settings'], (result) => {
     if (!result.settings) {
       const defaultSettings: OpenApplySettings = {
@@ -32,7 +30,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     handleAnalyzeJob(request.job, request.resume)
       .then((scorecard) => sendResponse({ success: true, scorecard }))
       .catch((err) => sendResponse({ success: false, error: err.message }));
-    return true; // Keep message channel open for async response
+    return true;
   }
 
   if (request.type === 'OPENAPPLY_GENERATE_COVER_LETTER') {
@@ -53,21 +51,22 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 async function getStoredSettings(): Promise<OpenApplySettings> {
   return new Promise((resolve) => {
     chrome.storage.local.get(['settings'], (result: any) => {
-      resolve(result.settings || {
-        apiKey: '',
-        provider: 'openai',
-        model: 'gpt-4o-mini',
-        autoFilterPromoted: true,
-        maxApplicantThreshold: 100,
-        hideFakeRemote: true,
-        autoSyncDrive: false,
-        googleOAuthConnected: false
-      });
+      resolve(
+        result.settings || {
+          apiKey: '',
+          provider: 'openai',
+          model: 'gpt-4o-mini',
+          autoFilterPromoted: true,
+          maxApplicantThreshold: 100,
+          hideFakeRemote: true,
+          autoSyncDrive: false,
+          googleOAuthConnected: false
+        }
+      );
     });
   });
 }
 
-// BYOK OpenAI API Call Execution
 async function handleAnalyzeJob(job: LinkedInJobPosting, resume: any): Promise<JobScorecard> {
   const settings = await getStoredSettings();
   if (!settings.apiKey) {
@@ -80,7 +79,7 @@ async function handleAnalyzeJob(job: LinkedInJobPosting, resume: any): Promise<J
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': `Bearer ${settings.apiKey}`
+      Authorization: `Bearer ${settings.apiKey}`
     },
     body: JSON.stringify({
       model: settings.model || 'gpt-4o-mini',
@@ -127,7 +126,7 @@ async function handleGenerateCoverLetter(job: LinkedInJobPosting, resume: any): 
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': `Bearer ${settings.apiKey}`
+      Authorization: `Bearer ${settings.apiKey}`
     },
     body: JSON.stringify({
       model: settings.model || 'gpt-4o-mini',
@@ -148,7 +147,6 @@ async function handleGenerateCoverLetter(job: LinkedInJobPosting, resume: any): 
   return data.choices[0].message.content;
 }
 
-// Google Drive Syncing using Chrome Identity API
 async function handleSyncToGoogleDrive(logEntry: UnemploymentLogEntry): Promise<string> {
   return new Promise((resolve, reject) => {
     if (typeof chrome.identity === 'undefined') {
@@ -163,7 +161,6 @@ async function handleSyncToGoogleDrive(logEntry: UnemploymentLogEntry): Promise<
       }
 
       try {
-        // Append row to user's Google Drive OpenApply Compliance Spreadsheet
         const rowData = [
           logEntry.dateApplied,
           logEntry.company,

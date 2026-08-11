@@ -3,28 +3,16 @@
   "name": "OpenApply - Privacy-First Job Copilot & Unemployment Logger",
   "version": "1.0.0",
   "description": "Filter LinkedIn jobs, detect fake remote listings, generate BYOK cover letters, and log applications to Google Drive for US unemployment compliance.",
-  "permissions": [
-    "storage",
-    "activeTab",
-    "scripting",
-    "identity"
-  ],
-  "host_permissions": [
-    "https://*.linkedin.com/*"
-  ],
+  "permissions": ["storage", "activeTab", "scripting", "identity"],
+  "host_permissions": ["https://*.linkedin.com/*"],
   "action": {
     "default_popup": "popup.html",
     "default_title": "OpenApply Settings & Controls"
   },
   "content_scripts": [
     {
-      "matches": [
-        "https://*.linkedin.com/jobs/*",
-        "https://www.linkedin.com/jobs/*"
-      ],
-      "js": [
-        "content.js"
-      ],
+      "matches": ["https://*.linkedin.com/jobs/*", "https://www.linkedin.com/jobs/*"],
+      "js": ["content.js"],
       "run_at": "document_idle"
     }
   ],
@@ -34,10 +22,7 @@
   },
   "oauth2": {
     "client_id": "YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com",
-    "scopes": [
-      "https://www.googleapis.com/auth/drive.file",
-      "https://www.googleapis.com/auth/spreadsheets"
-    ]
+    "scopes": ["https://www.googleapis.com/auth/drive.file", "https://www.googleapis.com/auth/spreadsheets"]
   },
   "icons": {
     "16": "icons/icon16.png",

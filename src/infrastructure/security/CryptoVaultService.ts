@@ -2,7 +2,6 @@
  * OpenApply AES-256-GCM Web Crypto Vault Service.
  * Provides client-side encrypted storage protection for BYOK tokens and personal credentials.
  */
-
 export class CryptoVaultService {
   private static SALT = new Uint8Array([14, 23, 88, 101, 240, 12, 45, 99, 11, 201, 88, 33, 4, 19, 87, 50]);
 
@@ -30,6 +29,11 @@ export class CryptoVaultService {
     );
   }
 
+  /**
+   * Encrypts plaintext using Web Crypto API AES-256-GCM.
+   * @param plainText - Sensitive input text
+   * @returns Base64 encoded cipher text string
+   */
   public static async encrypt(plainText: string): Promise<string> {
     try {
       const key = await this.getKey();
@@ -46,12 +50,16 @@ export class CryptoVaultService {
       combined.set(new Uint8Array(encryptedBuffer), iv.length);
 
       return btoa(String.fromCharCode(...combined));
-    } catch (e) {
-      // Fallback for non-subtle crypto environments
+    } catch {
       return 'enc:' + btoa(plainText);
     }
   }
 
+  /**
+   * Decrypts AES-256-GCM cipher text back to plaintext.
+   * @param cipherText - Base64 cipher string
+   * @returns Decrypted plaintext string
+   */
   public static async decrypt(cipherText: string): Promise<string> {
     if (!cipherText) return '';
     if (cipherText.startsWith('enc:')) {
@@ -69,16 +77,12 @@ export class CryptoVaultService {
       const iv = combined.slice(0, 12);
       const data = combined.slice(12);
 
-      const decryptedBuffer = await window.crypto.subtle.decrypt(
-        { name: 'AES-GCM', iv },
-        key,
-        data
-      );
+      const decryptedBuffer = await window.crypto.subtle.decrypt({ name: 'AES-GCM', iv }, key, data);
 
       const decoder = new TextDecoder();
       return decoder.decode(decryptedBuffer);
-    } catch (e) {
-      return cipherText; // Return raw if unencrypted legacy format
+    } catch {
+      return cipherText;
     }
   }
 }

@@ -1,5 +1,8 @@
 import { IEventBus, OpenApplyEventType, EventCallback } from '../../core/ports/IEventBus';
 
+/**
+ * In-memory event bus implementing publish-subscribe event dispatching.
+ */
 export class EventBus implements IEventBus {
   private subscribers: Map<OpenApplyEventType, Set<EventCallback>>;
 
@@ -15,7 +18,6 @@ export class EventBus implements IEventBus {
     const set = this.subscribers.get(event)!;
     set.add(callback);
 
-    // Return unsubscribe function
     return () => {
       set.delete(callback);
     };
@@ -35,4 +37,7 @@ export class EventBus implements IEventBus {
   }
 }
 
+/**
+ * Global singleton EventBus instance.
+ */
 export const eventBus = new EventBus();

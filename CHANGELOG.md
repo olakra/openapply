@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.0.1] - 2026-08-10
 
 ### Added
+
 - **Monorepo Architecture**: Initial release with clean monorepo organization (`/apps/extension`, `/apps/docs`, `/packages/prompt-engine`, `/packages/shared-types`).
 - **Manifest V3 Extension**: Client-side LinkedIn copilot extension powered by React 19, TypeScript, Vite, and Tailwind CSS.
 - **BYOK AI Integration**: Bring Your Own Key support for OpenAI models (`gpt-4o-mini`, `gpt-4o`) with direct API calls bypassing intermediary backend servers.

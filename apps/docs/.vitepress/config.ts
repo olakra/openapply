@@ -1,4 +1,4 @@
-import { defineConfig } from 'vitepress'
+import { defineConfig } from 'vitepress';
 
 export default defineConfig({
   base: '/openapply/',
@@ -76,9 +76,7 @@ gtag('config', 'G-OPENAPPLY2026', { 'anonymize_ip': true });`
       }
     ],
 
-    socialLinks: [
-      { icon: 'github', link: 'https://github.com/olakra/openapply' }
-    ],
+    socialLinks: [{ icon: 'github', link: 'https://github.com/olakra/openapply' }],
 
     footer: {
       message: 'Made with ❤️ in Seattle | Licensed under GNU General Public License v3.0 (GPL-3.0)',
@@ -89,4 +87,4 @@ gtag('config', 'G-OPENAPPLY2026', { 'anonymize_ip': true });`
       provider: 'local'
     }
   }
-})
+});

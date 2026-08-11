@@ -4,14 +4,14 @@ This document specifies the required repository configuration under **Settings >
 
 ## 🔀 Pull Request Merge Strategy Configuration
 
-| Setting | Status | Configuration Detail |
-|---|---|---|
-| **Allow squash merging** | ✅ **ENABLED** | Set as the default merge method for all Pull Requests. |
-| **Squash commit title** | 📌 **PR_TITLE** | Default commit title to the validated PR Title. |
-| **Squash commit description** | 📝 **PR_TITLE_AND_DESCRIPTION** | Default commit body to the PR title and description summary. |
-| **Allow merge commits** | ❌ **DISABLED** | Prevents non-linear dual-parent merge commits on `main` and `develop`. |
-| **Allow rebase merging** | ❌ **DISABLED** | Forces all PRs into 1 single, clean, verified atomic commit upon merge. |
-| **Automatically delete head branches** | ✅ **ENABLED** | Automatically cleans up feature branches on GitHub after PR merge. |
+| Setting                                | Status                          | Configuration Detail                                                    |
+| -------------------------------------- | ------------------------------- | ----------------------------------------------------------------------- |
+| **Allow squash merging**               | ✅ **ENABLED**                  | Set as the default merge method for all Pull Requests.                  |
+| **Squash commit title**                | 📌 **PR_TITLE**                 | Default commit title to the validated PR Title.                         |
+| **Squash commit description**          | 📝 **PR_TITLE_AND_DESCRIPTION** | Default commit body to the PR title and description summary.            |
+| **Allow merge commits**                | ❌ **DISABLED**                 | Prevents non-linear dual-parent merge commits on `main` and `develop`.  |
+| **Allow rebase merging**               | ❌ **DISABLED**                 | Forces all PRs into 1 single, clean, verified atomic commit upon merge. |
+| **Automatically delete head branches** | ✅ **ENABLED**                  | Automatically cleans up feature branches on GitHub after PR merge.      |
 
 ---
 

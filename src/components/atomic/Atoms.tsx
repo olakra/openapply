@@ -1,11 +1,18 @@
 import React from 'react';
 
-// Atoms: Smallest reusable UI primitives
+/**
+ * Props schema for Button component.
+ */
 export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: 'primary' | 'secondary' | 'outline' | 'danger';
   size?: 'sm' | 'md' | 'lg';
 }
 
+/**
+ * Button component atom.
+ * @param props - ButtonProps object
+ * @returns React element
+ */
 export const Button: React.FC<ButtonProps> = ({
   children,
   variant = 'primary',
@@ -13,8 +20,9 @@ export const Button: React.FC<ButtonProps> = ({
   className = '',
   ...props
 }) => {
-  const baseStyles = 'font-semibold rounded-lg transition-colors cursor-pointer inline-flex items-center justify-center gap-1.5 focus:outline-none';
-  
+  const baseStyles =
+    'font-semibold rounded-lg transition-colors cursor-pointer inline-flex items-center justify-center gap-1.5 focus:outline-none';
+
   const variants = {
     primary: 'bg-emerald-600 hover:bg-emerald-700 text-white shadow-xs',
     secondary: 'bg-slate-900 hover:bg-slate-800 text-white shadow-xs',
@@ -29,19 +37,21 @@ export const Button: React.FC<ButtonProps> = ({
   };
 
   return (
-    <button
-      className={`${baseStyles} ${variants[variant]} ${sizes[size]} ${className}`}
-      {...props}
-    >
+    <button className={`${baseStyles} ${variants[variant]} ${sizes[size]} ${className}`} {...props}>
       {children}
     </button>
   );
 };
 
-export const Badge: React.FC<{ children: React.ReactNode; color?: 'emerald' | 'amber' | 'blue' | 'indigo' | 'red' }> = ({
-  children,
-  color = 'emerald'
-}) => {
+/**
+ * Badge component atom for status tag rendering.
+ * @param props - Component props
+ * @returns React element
+ */
+export const Badge: React.FC<{
+  children: React.ReactNode;
+  color?: 'emerald' | 'amber' | 'blue' | 'indigo' | 'red';
+}> = ({ children, color = 'emerald' }) => {
   const styles = {
     emerald: 'bg-emerald-50 text-emerald-700 border-emerald-200',
     amber: 'bg-amber-50 text-amber-800 border-amber-200',
@@ -51,18 +61,21 @@ export const Badge: React.FC<{ children: React.ReactNode; color?: 'emerald' | 'a
   };
 
   return (
-    <span className={`px-2 py-0.5 rounded text-[10px] font-bold border font-mono ${styles[color]}`}>
-      {children}
-    </span>
+    <span className={`px-2 py-0.5 rounded text-[10px] font-bold border font-mono ${styles[color]}`}>{children}</span>
   );
 };
 
-export const ToggleSwitch: React.FC<{ checked: boolean; onChange: (checked: boolean) => void; label: string; disabled?: boolean }> = ({
-  checked,
-  onChange,
-  label,
-  disabled = false
-}) => (
+/**
+ * Toggle switch component atom.
+ * @param props - Component props
+ * @returns React element
+ */
+export const ToggleSwitch: React.FC<{
+  checked: boolean;
+  onChange: (checked: boolean) => void;
+  label: string;
+  disabled?: boolean;
+}> = ({ checked, onChange, label, disabled = false }) => (
   <label className="flex items-center justify-between cursor-pointer group">
     <span className="text-xs text-slate-700 group-hover:text-slate-900 transition font-medium">{label}</span>
     <input

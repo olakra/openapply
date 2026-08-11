@@ -1,4 +1,4 @@
-import { OpenApplySettings, UserResume, UnemploymentLogEntry, JobScorecard } from '@openapply/shared-types';
+import { OpenApplySettings, UserResume, UnemploymentLogEntry } from '@openapply/shared-types';
 
 const STORAGE_KEYS = {
   SETTINGS: 'openapply_settings',
@@ -7,6 +7,9 @@ const STORAGE_KEYS = {
   SCORECARDS: 'openapply_job_scorecards'
 };
 
+/**
+ * Default fallback configuration settings object.
+ */
 export const DEFAULT_SETTINGS: OpenApplySettings = {
   apiKey: '',
   provider: 'openai',
@@ -19,13 +22,28 @@ export const DEFAULT_SETTINGS: OpenApplySettings = {
   unemploymentStateCode: 'US-GENERIC'
 };
 
+/**
+ * Default sample resume profile for local demo preview.
+ */
 export const DEFAULT_RESUME: UserResume = {
   fullName: 'Alex Morgan',
   email: 'alex.morgan.tech@gmail.com',
   phone: '+1 (555) 382-9011',
   location: 'San Francisco, CA (Open to Remote)',
-  summary: 'Senior Full Stack Software Engineer with 6+ years of experience building scalable TypeScript, React, Node.js, and cloud systems. Specialized in performance optimization and API design.',
-  skills: ['TypeScript', 'React', 'Node.js', 'Next.js', 'Python', 'GraphQL', 'Tailwind CSS', 'Docker', 'PostgreSQL', 'AWS'],
+  summary:
+    'Senior Full Stack Software Engineer with 6+ years of experience building scalable TypeScript, React, Node.js, and cloud systems. Specialized in performance optimization and API design.',
+  skills: [
+    'TypeScript',
+    'React',
+    'Node.js',
+    'Next.js',
+    'Python',
+    'GraphQL',
+    'Tailwind CSS',
+    'Docker',
+    'PostgreSQL',
+    'AWS'
+  ],
   workHistory: [
     {
       company: 'Apex Cloud Solutions',
@@ -58,6 +76,10 @@ export const DEFAULT_RESUME: UserResume = {
   customInstructions: 'Highlight experience with TypeScript monorepos, React performance, and modern cloud design.'
 };
 
+/**
+ * Retrieves stored application settings from Chrome extension storage or LocalStorage.
+ * @returns Settings configuration object promise
+ */
 export async function getStoredSettings(): Promise<OpenApplySettings> {
   if (typeof chrome !== 'undefined' && chrome.storage && chrome.storage.local) {
     return new Promise((resolve) => {
@@ -70,6 +92,10 @@ export async function getStoredSettings(): Promise<OpenApplySettings> {
   return raw ? JSON.parse(raw) : DEFAULT_SETTINGS;
 }
 
+/**
+ * Saves updated application settings to Chrome storage or LocalStorage.
+ * @param settings - Updated settings configuration object
+ */
 export async function saveStoredSettings(settings: OpenApplySettings): Promise<void> {
   if (typeof chrome !== 'undefined' && chrome.storage && chrome.storage.local) {
     chrome.storage.local.set({ settings });
@@ -78,6 +104,10 @@ export async function saveStoredSettings(settings: OpenApplySettings): Promise<v
   }
 }
 
+/**
+ * Retrieves candidate resume profile from Chrome storage or LocalStorage.
+ * @returns UserResume object promise
+ */
 export async function getStoredResume(): Promise<UserResume> {
   if (typeof chrome !== 'undefined' && chrome.storage && chrome.storage.local) {
     return new Promise((resolve) => {
@@ -90,6 +120,10 @@ export async function getStoredResume(): Promise<UserResume> {
   return raw ? JSON.parse(raw) : DEFAULT_RESUME;
 }
 
+/**
+ * Saves updated candidate resume profile to Chrome storage or LocalStorage.
+ * @param resume - Updated candidate resume profile
+ */
 export async function saveStoredResume(resume: UserResume): Promise<void> {
   if (typeof chrome !== 'undefined' && chrome.storage && chrome.storage.local) {
     chrome.storage.local.set({ resume });
@@ -98,6 +132,10 @@ export async function saveStoredResume(resume: UserResume): Promise<void> {
   }
 }
 
+/**
+ * Retrieves list of logged unemployment applications.
+ * @returns List of UnemploymentLogEntry items
+ */
 export async function getUnemploymentLogs(): Promise<UnemploymentLogEntry[]> {
   if (typeof chrome !== 'undefined' && chrome.storage && chrome.storage.local) {
     return new Promise((resolve) => {
@@ -110,6 +148,11 @@ export async function getUnemploymentLogs(): Promise<UnemploymentLogEntry[]> {
   return raw ? JSON.parse(raw) : [];
 }
 
+/**
+ * Adds a new unemployment application entry to persistent storage.
+ * @param entry - UnemploymentLogEntry item
+ * @returns Updated array of UnemploymentLogEntry items
+ */
 export async function addUnemploymentLog(entry: UnemploymentLogEntry): Promise<UnemploymentLogEntry[]> {
   const current = await getUnemploymentLogs();
   const updated = [entry, ...current];

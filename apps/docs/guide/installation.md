@@ -5,6 +5,7 @@ Follow this guide to install the OpenApply Manifest V3 browser extension in Chro
 ---
 
 ## Prerequisites
+
 - **Node.js**: v18.0.0 or higher
 - **Bun** or **npm**
 - **OpenAI API Key**: (Optional for BYOK real AI analysis; free heuristic mode works without a key).
