@@ -1,24 +1,48 @@
 import React, { useState, useEffect } from 'react';
-import { 
-  Shield, Key, Filter, FileText, HardDrive, Download, Eye, Sparkles, 
-  CheckCircle2, AlertTriangle, ExternalLink, Code2, Copy, RefreshCw, 
-  Briefcase, Search, Plus, Trash2, Check, User, ArrowRight, BookOpen, 
-  ShieldCheck, Layers, FileSpreadsheet, Lock
+import {
+  Shield,
+  Filter,
+  FileText,
+  HardDrive,
+  Download,
+  Sparkles,
+  CheckCircle2,
+  AlertTriangle,
+  Code2,
+  Copy,
+  RefreshCw,
+  Briefcase,
+  Search,
+  Check,
+  User,
+  Layers,
+  FileSpreadsheet,
+  Lock
 } from 'lucide-react';
 
 import { OpenApplyPopupUI } from '../apps/extension/src/popup/App';
 import { SAMPLE_LINKEDIN_JOBS } from './lib/sample-data';
-import { 
-  getStoredSettings, saveStoredSettings, getStoredResume, saveStoredResume, 
-  getUnemploymentLogs, addUnemploymentLog 
+import {
+  getStoredSettings,
+  getStoredResume,
+  saveStoredResume,
+  getUnemploymentLogs,
+  addUnemploymentLog
 } from './lib/storage';
 import { executeAtsAnalysis, executeCoverLetterGeneration } from './lib/ai-engine';
 import { generateProofConfirmationCode, exportLogsToCsv } from './lib/drive-sync';
-import { 
-  LinkedInJobPosting, UserResume, OpenApplySettings, JobScorecard, 
-  UnemploymentLogEntry 
+import {
+  LinkedInJobPosting,
+  UserResume,
+  OpenApplySettings,
+  JobScorecard,
+  UnemploymentLogEntry
 } from '@openapply/shared-types';
 
+/**
+ * Main Web Application component for OpenApply web interactive workspace simulator.
+ * @returns React element
+ */
 export default function App() {
   const [activeTab, setActiveTab] = useState<'simulator' | 'popup' | 'unemployment' | 'resume' | 'code'>('simulator');
   const [settings, setSettings] = useState<OpenApplySettings>({
@@ -36,17 +60,17 @@ export default function App() {
   const [resume, setResume] = useState<UserResume | null>(null);
   const [unemploymentLogs, setLogs] = useState<UnemploymentLogEntry[]>([]);
   const [selectedJob, setSelectedJob] = useState<LinkedInJobPosting>(SAMPLE_LINKEDIN_JOBS[0]);
-  
-  // AI State
+
   const [isAnalyzing, setIsAnalyzing] = useState<boolean>(false);
   const [activeScorecard, setActiveScorecard] = useState<JobScorecard | null>(null);
   const [isGeneratingCoverLetter, setIsGeneratingCoverLetter] = useState<boolean>(false);
   const [generatedCoverLetter, setGeneratedCoverLetter] = useState<string | null>(null);
-  
-  // Toast / Feedback State
+
   const [toastMessage, setToastMessage] = useState<string | null>(null);
   const [copiedCodeFile, setCopiedCodeFile] = useState<string | null>(null);
-  const [selectedCodeFile, setSelectedCodeFile] = useState<'manifest' | 'content' | 'background' | 'types' | 'prompts'>('manifest');
+  const [selectedCodeFile, setSelectedCodeFile] = useState<'manifest' | 'content' | 'background' | 'types' | 'prompts'>(
+    'manifest'
+  );
 
   useEffect(() => {
     loadInitialData();
@@ -66,7 +90,6 @@ export default function App() {
     setTimeout(() => setToastMessage(null), 3000);
   };
 
-  // Perform AI ATS Analysis
   const handleAnalyzeJob = async (job: LinkedInJobPosting) => {
     if (!resume) return;
     setIsAnalyzing(true);
@@ -82,7 +105,6 @@ export default function App() {
     }
   };
 
-  // Generate BYOK Cover Letter
   const handleGenerateCoverLetter = async (job: LinkedInJobPosting) => {
     if (!resume) return;
     setIsGeneratingCoverLetter(true);
@@ -97,7 +119,6 @@ export default function App() {
     }
   };
 
-  // Log Application for State Unemployment Claim Compliance
   const handleLogUnemploymentProof = async (job: LinkedInJobPosting) => {
     const proofCode = generateProofConfirmationCode(job.jobId, job.company);
     const newEntry: UnemploymentLogEntry = {
@@ -120,7 +141,6 @@ export default function App() {
     showToast(`Logged application proof for ${job.company} (${proofCode})!`);
   };
 
-  // Code inspection contents
   const CODE_FILES = {
     manifest: {
       name: 'apps/extension/manifest.json',
@@ -152,8 +172,7 @@ export default function App() {
     content: {
       name: 'apps/extension/src/content/index.ts',
       lang: 'typescript',
-      content: `// LinkedIn DOM Parsing & Filtering Content Script
-export async function calculateJobHash(jobId: string): Promise<string> {
+      content: `export async function calculateJobHash(jobId: string): Promise<string> {
   const encoder = new TextEncoder();
   const data = encoder.encode(jobId);
   const hashBuffer = await crypto.subtle.digest('SHA-256', data);
@@ -161,7 +180,6 @@ export async function calculateJobHash(jobId: string): Promise<string> {
 }
 
 export class LinkedInJobFilterEngine {
-  // Dims Promoted & listings with >100 applicants
   public async processJobListings() {
     const cards = document.querySelectorAll('.job-card-container');
     cards.forEach(card => {
@@ -176,8 +194,7 @@ export class LinkedInJobFilterEngine {
     background: {
       name: 'apps/extension/src/background/index.ts',
       lang: 'typescript',
-      content: `// Background Service Worker for BYOK Requests & Drive Syncing
-chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+      content: `chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   if (request.type === 'OPENAPPLY_ANALYZE_JOB') {
     handleAnalyzeJob(request.job, request.resume)
       .then((scorecard) => sendResponse({ success: true, scorecard }));
@@ -333,7 +350,8 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
                   Interactive LinkedIn Content Script Sandbox
                 </h2>
                 <p className="text-xs text-slate-500 mt-0.5">
-                  Simulating OpenApply Manifest V3 content script running on <code className="text-emerald-700 font-mono font-semibold">https://linkedin.com/jobs/*</code>.
+                  Simulating OpenApply Manifest V3 content script running on{' '}
+                  <code className="text-emerald-700 font-mono font-semibold">https://linkedin.com/jobs/*</code>.
                   Promoted and high-applicant listings are automatically dimmed.
                 </p>
               </div>
@@ -341,7 +359,9 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
               <div className="flex items-center space-x-3 text-xs">
                 <div className="flex items-center gap-1.5 px-3 py-1.5 bg-slate-50 rounded-lg border border-slate-200">
                   <span className="text-slate-500">Filter Promoted:</span>
-                  <span className={`font-semibold ${settings.autoFilterPromoted ? 'text-emerald-700' : 'text-slate-400'}`}>
+                  <span
+                    className={`font-semibold ${settings.autoFilterPromoted ? 'text-emerald-700' : 'text-slate-400'}`}
+                  >
                     {settings.autoFilterPromoted ? 'ACTIVE' : 'OFF'}
                   </span>
                 </div>
@@ -383,7 +403,9 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
                         {isDimmed && (
                           <div className="absolute top-2 right-2 px-2 py-0.5 bg-amber-50 text-amber-800 border border-amber-200 rounded text-[10px] font-semibold flex items-center gap-1">
                             <Filter className="w-3 h-3" />
-                            {isPromotedFiltered ? 'Promoted Listing Dimmed' : `> ${settings.maxApplicantThreshold} Applicants`}
+                            {isPromotedFiltered
+                              ? 'Promoted Listing Dimmed'
+                              : `> ${settings.maxApplicantThreshold} Applicants`}
                           </div>
                         )}
 
@@ -411,7 +433,9 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
                   <div className="flex items-start justify-between">
                     <div>
                       <h2 className="text-base font-bold text-slate-900">{selectedJob.title}</h2>
-                      <p className="text-xs text-emerald-700 font-semibold">{selectedJob.company} • {selectedJob.location}</p>
+                      <p className="text-xs text-emerald-700 font-semibold">
+                        {selectedJob.company} • {selectedJob.location}
+                      </p>
                     </div>
                     <span className="text-[10px] text-slate-500 font-mono bg-slate-50 px-2 py-1 rounded border border-slate-200">
                       ID: SHA256({selectedJob.jobId.slice(0, 6)})
@@ -438,7 +462,11 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
                       disabled={isAnalyzing}
                       className="px-3 py-2 bg-emerald-600 hover:bg-emerald-500 disabled:opacity-50 text-white rounded-lg text-xs font-bold flex items-center justify-center gap-1.5 transition shadow-xs cursor-pointer"
                     >
-                      {isAnalyzing ? <RefreshCw className="w-3.5 h-3.5 animate-spin" /> : <Sparkles className="w-3.5 h-3.5" />}
+                      {isAnalyzing ? (
+                        <RefreshCw className="w-3.5 h-3.5 animate-spin" />
+                      ) : (
+                        <Sparkles className="w-3.5 h-3.5" />
+                      )}
                       <span>1-Click ATS Score</span>
                     </button>
 
@@ -447,7 +475,11 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
                       disabled={isGeneratingCoverLetter}
                       className="px-3 py-2 bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50 text-white rounded-lg text-xs font-bold flex items-center justify-center gap-1.5 transition shadow-xs cursor-pointer"
                     >
-                      {isGeneratingCoverLetter ? <RefreshCw className="w-3.5 h-3.5 animate-spin" /> : <FileText className="w-3.5 h-3.5" />}
+                      {isGeneratingCoverLetter ? (
+                        <RefreshCw className="w-3.5 h-3.5 animate-spin" />
+                      ) : (
+                        <FileText className="w-3.5 h-3.5" />
+                      )}
                       <span>AI Cover Letter</span>
                     </button>
 
@@ -465,9 +497,13 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
                     <div className="mt-3 p-3 bg-slate-950 rounded-lg border border-slate-800 space-y-2 text-slate-100">
                       <div className="flex items-center justify-between">
                         <span className="text-xs font-bold text-slate-200">ATS Fit Score:</span>
-                        <span className={`text-sm font-black font-mono px-2 py-0.5 rounded ${
-                          activeScorecard.overallScore >= 80 ? 'bg-emerald-950 text-emerald-400 border border-emerald-800' : 'bg-amber-950 text-amber-400 border border-amber-800'
-                        }`}>
+                        <span
+                          className={`text-sm font-black font-mono px-2 py-0.5 rounded ${
+                            activeScorecard.overallScore >= 80
+                              ? 'bg-emerald-950 text-emerald-400 border border-emerald-800'
+                              : 'bg-amber-950 text-amber-400 border border-amber-800'
+                          }`}
+                        >
                           {activeScorecard.overallScore}% MATCH
                         </span>
                       </div>
@@ -567,7 +603,8 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
                   State Unemployment Job Search Compliance Logs
                 </h2>
                 <p className="text-xs text-slate-500 mt-0.5">
-                  Audit-proof record of job applications with unique confirmation codes for state work-search verification (EDD / TWC / NY DOL).
+                  Audit-proof record of job applications with unique confirmation codes for state work-search
+                  verification (EDD / TWC / NY DOL).
                 </p>
               </div>
 
@@ -587,7 +624,9 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
                 <div className="p-12 text-center text-slate-500 text-xs">
                   <FileText className="w-8 h-8 text-slate-400 mx-auto mb-2" />
                   <p className="font-semibold text-slate-700">No job applications logged yet.</p>
-                  <p className="text-[11px] text-slate-500 mt-1">Use the LinkedIn simulator to click "Log Application Proof" on any position.</p>
+                  <p className="text-[11px] text-slate-500 mt-1">
+                    Use the LinkedIn simulator to click "Log Application Proof" on any position.
+                  </p>
                 </div>
               ) : (
                 <div className="overflow-x-auto">
@@ -610,7 +649,9 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
                           <td className="p-3 font-bold text-slate-900">{log.company}</td>
                           <td className="p-3 text-slate-800">{log.jobTitle}</td>
                           <td className="p-3 text-slate-600">{log.workType}</td>
-                          <td className="p-3 font-mono text-emerald-700 font-bold text-[11px]">{log.confirmationNumber}</td>
+                          <td className="p-3 font-mono text-emerald-700 font-bold text-[11px]">
+                            {log.confirmationNumber}
+                          </td>
                           <td className="p-3">
                             <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
                               {log.status}
@@ -696,7 +737,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
                 <input
                   type="text"
                   value={resume.skills.join(', ')}
-                  onChange={(e) => setResume({ ...resume, skills: e.target.value.split(',').map(s => s.trim()) })}
+                  onChange={(e) => setResume({ ...resume, skills: e.target.value.split(',').map((s) => s.trim()) })}
                   className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-xs text-slate-900 focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 font-mono"
                 />
               </div>
@@ -706,7 +747,9 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
                 <input
                   type="text"
                   value={resume.targetRoles.join(', ')}
-                  onChange={(e) => setResume({ ...resume, targetRoles: e.target.value.split(',').map(s => s.trim()) })}
+                  onChange={(e) =>
+                    setResume({ ...resume, targetRoles: e.target.value.split(',').map((s) => s.trim()) })
+                  }
                   className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-xs text-slate-900 focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500"
                 />
               </div>
@@ -781,7 +824,11 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
                     }}
                     className="px-2.5 py-1 bg-slate-800 hover:bg-slate-700 text-slate-200 text-[11px] rounded flex items-center gap-1 font-medium cursor-pointer"
                   >
-                    {copiedCodeFile === selectedCodeFile ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
+                    {copiedCodeFile === selectedCodeFile ? (
+                      <Check className="w-3.5 h-3.5 text-emerald-400" />
+                    ) : (
+                      <Copy className="w-3.5 h-3.5" />
+                    )}
                     <span>{copiedCodeFile === selectedCodeFile ? 'Copied' : 'Copy Code'}</span>
                   </button>
                 </div>

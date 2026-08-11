@@ -15,7 +15,8 @@ OpenApply generates concise, 3-paragraph tailored cover letters designed to grab
 ## ⚡ Customization & Tone Guidance
 
 You can provide custom instructions in your Candidate Profile settings:
-- *"Emphasize my experience scaling distributed backend microservices."*
-- *"Keep tone energetic, concise, and focused on startup growth metrics."*
+
+- _"Emphasize my experience scaling distributed backend microservices."_
+- _"Keep tone energetic, concise, and focused on startup growth metrics."_
 
 The cover letter generator incorporates your guidance while adhering strictly to maximum 250-word limits.

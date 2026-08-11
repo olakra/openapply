@@ -1,5 +1,8 @@
 import { LinkedInJobPosting } from '@openapply/shared-types';
 
+/**
+ * Sample LinkedIn job postings for local demo preview and testing.
+ */
 export const SAMPLE_LINKEDIN_JOBS: LinkedInJobPosting[] = [
   {
     jobId: '389201481',

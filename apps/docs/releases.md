@@ -28,6 +28,7 @@ All notable updates to OpenApply are documented here. OpenApply strictly follows
 ---
 
 ### 🔧 Commit Highlights
+
 - `feat(prompt-engine)`: Externalize Markdown prompt templates and add dynamic variable interpolation.
 - `feat(security)`: Implement Web Crypto AES-256-GCM vault for API key storage.
 - `refactor(ui)`: Apply atomic light/dark contrast theme with Lucide React icons.

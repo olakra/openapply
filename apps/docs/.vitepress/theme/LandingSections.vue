@@ -24,7 +24,8 @@
     <section class="oa-feature-section">
       <h2 class="oa-section-title">Built for Modern Job Seekers & Unemployment Compliance</h2>
       <p class="oa-section-sub">
-        Stop wasting time manually filtering fake job postings or struggling to organize weekly state unemployment work-search proof.
+        Stop wasting time manually filtering fake job postings or struggling to organize weekly state unemployment
+        work-search proof.
       </p>
 
       <div class="oa-card-grid">
@@ -32,7 +33,8 @@
           <div class="oa-card-badge">Privacy First</div>
           <h3>BYOK OpenAI Integration</h3>
           <p>
-            Use your existing OpenAI API key (e.g. <code>gpt-4o-mini</code>) or Gemini model. Your keys are client-side encrypted and requests bypass intermediary telemetry servers.
+            Use your existing OpenAI API key (e.g. <code>gpt-4o-mini</code>) or Gemini model. Your keys are client-side
+            encrypted and requests bypass intermediary telemetry servers.
           </p>
         </div>
 
@@ -40,7 +42,8 @@
           <div class="oa-card-badge">State Compliance</div>
           <h3>Audit-Proof Work Search Records</h3>
           <p>
-            Automatically logs every application attempt with position details, date applied, and unique verification hashes to meet state unemployment requirements (CA EDD, TX TWC, NY DOL).
+            Automatically logs every application attempt with position details, date applied, and unique verification
+            hashes to meet state unemployment requirements (CA EDD, TX TWC, NY DOL).
           </p>
         </div>
 
@@ -48,7 +51,8 @@
           <div class="oa-card-badge">Customizable AI</div>
           <h3>Externalized Prompt Engine</h3>
           <p>
-            Switch evaluation personas between Technical Recruiter, Engineering Manager, or Tech Lead. Modify markdown prompt templates directly without code re-compilation.
+            Switch evaluation personas between Technical Recruiter, Engineering Manager, or Tech Lead. Modify markdown
+            prompt templates directly without code re-compilation.
           </p>
         </div>
       </div>
@@ -61,33 +65,32 @@
           <span class="oa-pill">Early Access & Release Updates</span>
           <h2>Join the OpenApply Community</h2>
           <p>
-            Get notified when new browser extension releases (Firefox, Safari, Edge) and multi-LLM (Claude 3.5, Ollama) integrations drop.
+            Get notified when new browser extension releases (Firefox, Safari, Edge) and multi-LLM (Claude 3.5, Ollama)
+            integrations drop.
           </p>
         </div>
 
         <div class="oa-form-wrapper">
-          <iframe 
-            src="https://docs.google.com/forms/d/e/1FAIpQLSc_ExampleFormKeyOpenApply2026/viewform?embedded=true" 
-            width="100%" 
-            height="320" 
-            frameborder="0" 
-            marginheight="0" 
+          <iframe
+            src="https://docs.google.com/forms/d/e/1FAIpQLSc_ExampleFormKeyOpenApply2026/viewform?embedded=true"
+            width="100%"
+            height="320"
+            frameborder="0"
+            marginheight="0"
             marginwidth="0"
             class="oa-google-form-iframe"
           >
             Loading Google Form...
           </iframe>
-          
+
           <div class="oa-fallback-form">
-            <input 
-              v-model="email" 
-              type="email" 
-              placeholder="Enter your email address (e.g. alex@example.com)" 
-              class="oa-input" 
+            <input
+              v-model="email"
+              type="email"
+              placeholder="Enter your email address (e.g. alex@example.com)"
+              class="oa-input"
             />
-            <button class="oa-btn-primary" @click="subscribeEmail">
-              Subscribe to Releases
-            </button>
+            <button class="oa-btn-primary" @click="subscribeEmail">Subscribe to Releases</button>
           </div>
           <p v-if="subscribedMessage" class="oa-success-msg">
             {{ subscribedMessage }}
@@ -102,17 +105,27 @@
       <div class="oa-support-card">
         <h2>Support Open Source Development</h2>
         <p>
-          OpenApply is completely free, open-source, and maintained under the GPL-3.0 license. If OpenApply saved you hours of job search frustration or secured your unemployment benefit compliance, consider backing the project!
+          OpenApply is completely free, open-source, and maintained under the GPL-3.0 license. If OpenApply saved you
+          hours of job search frustration or secured your unemployment benefit compliance, consider backing the project!
         </p>
-        
+
         <div class="oa-sponsor-buttons">
           <a href="https://www.buymeacoffee.com/olakra" target="_blank" rel="noreferrer" class="oa-sponsor-btn bmc-btn">
-            <img src="https://img.shields.io/badge/Buy%20Me%20A%20Coffee-Donate-yellow.svg?style=for-the-badge&logo=buy-me-a-coffee&logoColor=black" alt="Buy Me A Coffee" style="height: 28px; border-radius: 4px;" />
+            <img
+              src="https://img.shields.io/badge/Buy%20Me%20A%20Coffee-Donate-yellow.svg?style=for-the-badge&logo=buy-me-a-coffee&logoColor=black"
+              alt="Buy Me A Coffee"
+              style="height: 28px; border-radius: 4px"
+            />
           </a>
           <a href="https://www.patreon.com/olakra" target="_blank" rel="noreferrer" class="oa-sponsor-btn patreon-btn">
             ❤️ Support on Patreon
           </a>
-          <a href="https://github.com/olakra/openapply" target="_blank" rel="noreferrer" class="oa-sponsor-btn github-btn">
+          <a
+            href="https://github.com/olakra/openapply"
+            target="_blank"
+            rel="noreferrer"
+            class="oa-sponsor-btn github-btn"
+          >
             ⭐ Star on GitHub
           </a>
         </div>
@@ -202,7 +215,9 @@ function subscribeEmail() {
   padding: 1.75rem;
   border-radius: 0.85rem;
   position: relative;
-  transition: transform 0.2s ease, border-color 0.2s ease;
+  transition:
+    transform 0.2s ease,
+    border-color 0.2s ease;
 }
 
 .oa-card:hover {
@@ -377,12 +392,12 @@ function subscribeEmail() {
 }
 
 .bmc-btn {
-  background: #FFDD00;
+  background: #ffdd00;
   color: #000000 !important;
 }
 
 .patreon-btn {
-  background: #FF424D;
+  background: #ff424d;
   color: #ffffff !important;
 }
 

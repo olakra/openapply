@@ -1,0 +1,6 @@
+dist/
+coverage/
+node_modules/
+apps/docs/.vitepress/dist/
+bun.lock
+package-lock.json
