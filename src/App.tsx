@@ -222,10 +222,8 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
       <header className="bg-white border-b border-slate-200 sticky top-0 z-40 shadow-xs">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           <div className="flex items-center space-x-3">
-            <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-slate-900 to-slate-800 p-0.5 shadow-xs">
-              <div className="w-full h-full bg-slate-900 rounded-[10px] flex items-center justify-center">
-                <Shield className="w-5 h-5 text-emerald-400" />
-              </div>
+            <div className="w-9 h-9 rounded-xl bg-slate-900 p-0.5 shadow-xs overflow-hidden flex items-center justify-center">
+              <img src="/logo.png" alt="OpenApply Logo" className="w-full h-full object-cover rounded-[10px]" />
             </div>
             <div>
               <div className="flex items-center gap-2">
