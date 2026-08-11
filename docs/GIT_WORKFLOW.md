@@ -33,11 +33,24 @@ git rebase origin/develop
 ```
 > **Note**: If merge conflicts occur, resolve them in your code editor, stage the files with `git add <file>`, and continue the rebase with `git rebase --continue`.
 
-### 3. Interactive Rebase & Squash (`git rebase -i`)
-To combine multiple WIP local commits into one clean, verified commit:
+### 3. GPG / SSH Local Key Setup & Automatic Signing
+Configure Git to automatically sign all commits locally using your GPG or SSH key:
 ```bash
-# Rebase the last N commits interactively
-git rebase -i HEAD~3
+# 1. List GPG keys to get your Key ID
+gpg --list-secret-keys --keyid-format=long
+
+# 2. Configure Git signing key ID
+git config --global user.signingkey <YOUR_KEY_ID>
+
+# 3. Enable automatic commit signing globally
+git config --global commit.gpgsign true
+```
+
+### 4. Signed Interactive Rebase & Squash (`git rebase -i -S`)
+To combine multiple local WIP commits into one clean, verified commit while preserving signature verification:
+```bash
+# Rebase interactively onto origin/develop with signature enforcement (-S)
+git rebase -i -S origin/develop
 ```
 In your editor, mark the first commit as `pick` and subsequent commits as `squash` (or `s`):
 ```text
@@ -46,10 +59,10 @@ squash 5d6e7f8 fix typo in storage engine
 squash 9a0b1c2 update unit tests
 ```
 
-### 4. GPG Signed Commit Requirement (`-S`)
-All commits merged into `develop` or `main` MUST be cryptographically signed:
+### 5. Single Signed Commit (`git commit -S`)
+All commits merged into `develop` or `main` MUST be cryptographically signed (`-S`):
 ```bash
-git commit -S -m "feat(extension): implement Manifest V3 sidepanel listener (Closes #26)"
+git commit -S -m "feat(extension): implement Manifest V3 sidepanel listener (Closes #27)"
 ```
 
 ### 5. Safe Force Push (`--force-with-lease`)
