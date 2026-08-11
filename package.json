@@ -8,6 +8,9 @@
     "type": "git",
     "url": "https://github.com/olakra/openapply.git"
   },
+  "engines": {
+    "node": ">=24.0.0"
+  },
   "workspaces": [
     "apps/*",
     "packages/*"
