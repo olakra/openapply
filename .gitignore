@@ -1,0 +1,25 @@
+node_modules/
+build/
+dist/
+coverage/
+.DS_Store
+*.log
+.env
+.env.local
+.env.*.local
+!.env.example
+
+# Extension build outputs and zip archives
+*.zip
+*.crx
+*.pem
+apps/extension/dist/
+
+# Security & Secrets
+*client_secret*.json
+*credentials*.json
+*.pem
+*.key
+.idea/
+.vscode/
+

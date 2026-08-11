@@ -1,0 +1,6 @@
+{
+  "name": "OpenApply",
+  "description": "Free, open-source, privacy-first Manifest V3 extension monorepo for LinkedIn job filtering, BYOK AI cover letters, and US unemployment compliance logs.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

@@ -1,0 +1,47 @@
+{
+  "name": "openapply-monorepo",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Free, open-source, privacy-first Manifest V3 browser extension and monorepo for LinkedIn job filtering, BYOK AI cover letters, and Google Drive unemployment logs.",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/olakra/openapply.git"
+  },
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "vite --port=3000 --host=0.0.0.0",
+    "build": "vite build",
+    "build:extension": "vite build --config apps/extension/vite.config.ts",
+    "build:docs": "vitepress build apps/docs",
+    "preview": "vite preview",
+    "clean": "rm -rf dist apps/*/dist packages/*/dist",
+    "lint": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@google/genai": "^2.4.0",
+    "@tailwindcss/vite": "^4.1.14",
+    "@vitejs/plugin-react": "^5.0.4",
+    "dotenv": "^17.2.3",
+    "express": "^4.21.2",
+    "lucide-react": "^0.546.0",
+    "motion": "^12.23.24",
+    "react": "^19.0.1",
+    "react-dom": "^19.0.1",
+    "vite": "^6.2.3"
+  },
+  "devDependencies": {
+    "@types/chrome": "^0.2.5",
+    "@types/express": "^4.17.21",
+    "@types/node": "^22.14.0",
+    "autoprefixer": "^10.4.21",
+    "esbuild": "^0.25.0",
+    "tailwindcss": "^4.1.14",
+    "tsx": "^4.21.0",
+    "typescript": "~5.8.2",
+    "vitepress": "^1.6.4"
+  }
+}
