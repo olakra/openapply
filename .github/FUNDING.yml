@@ -1,0 +1,9 @@
+# These are supported funding model platforms for OpenApply (olakra/openapply)
+# OpenApply is 100% free, privacy-first, open-source software licensed under GPL-3.0.
+# Community sponsorships help fund open-source maintenance, browser extension store fees,
+# and ongoing development for privacy-first job seekers and state unemployment tools.
+
+github: [olakra]
+patreon: olakra
+buy_me_a_coffee: olakra
+custom: ['https://github.com/olakra/openapply']
