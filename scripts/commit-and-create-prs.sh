@@ -39,7 +39,6 @@ Initializes the monorepo workspace structure and Manifest V3 Chromium browser ex
 
 Closes #1" || echo "PR 1 creation skipped or already exists"
 
-gh pr merge feature/issue-1-monorepo-extension-setup --repo "$REPO" --merge --delete-branch || echo "PR 1 merge skipped"
 git checkout main
 git pull origin main || true
 
@@ -67,7 +66,6 @@ Adds client-side Bring Your Own Key (BYOK) OpenAI model integration with AES-256
 
 Closes #2" || echo "PR 2 creation skipped or already exists"
 
-gh pr merge feature/issue-2-byok-openai-crypto-vault --repo "$REPO" --merge --delete-branch || echo "PR 2 merge skipped"
 git checkout main
 git pull origin main || true
 
@@ -95,7 +93,6 @@ Injects real-time LinkedIn DOM filtering and overlay controls into \`linkedin.co
 
 Closes #3" || echo "PR 3 creation skipped or already exists"
 
-gh pr merge feature/issue-3-linkedin-dom-filtering --repo "$REPO" --merge --delete-branch || echo "PR 3 merge skipped"
 git checkout main
 git pull origin main || true
 
@@ -123,7 +120,6 @@ Adds automated Google Drive spreadsheet logging for state unemployment benefit c
 
 Closes #4" || echo "PR 4 creation skipped or already exists"
 
-gh pr merge feature/issue-4-google-drive-unemployment-logger --repo "$REPO" --merge --delete-branch || echo "PR 4 merge skipped"
 git checkout main
 git pull origin main || true
 
@@ -151,7 +147,6 @@ Creates the production-ready VitePress documentation site and GitHub Pages deplo
 
 Closes #5" || echo "PR 5 creation skipped or already exists"
 
-gh pr merge feature/issue-5-vitepress-docs-landing --repo "$REPO" --merge --delete-branch || echo "PR 5 merge skipped"
 git checkout main
 git pull origin main || true
 
@@ -178,8 +173,6 @@ Adds automated semantic version release synchronization, project metadata, and G
 - GitHub Sponsors configuration (\`.github/FUNDING.yml\`) with Buy Me a Coffee, Patreon, and custom support URLs.
 
 Closes #6" || echo "PR 6 creation skipped or already exists"
-
-gh pr merge feature/issue-6-gitflow-release-sync-funding --repo "$REPO" --merge --delete-branch || echo "PR 6 merge skipped"
 
 # Return to main branch
 git checkout main
