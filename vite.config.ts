@@ -13,9 +13,19 @@ export default defineConfig(() => {
         '@openapply/prompt-engine': path.resolve(__dirname, './packages/prompt-engine/index.ts')
       },
     },
+    test: {
+      globals: true,
+      environment: 'jsdom',
+      coverage: {
+        provider: 'v8',
+        reporter: ['text', 'json', 'lcov'],
+        reportsDirectory: './coverage',
+        exclude: ['**/node_modules/**', '**/dist/**', '**/.vitepress/dist/**', '*.config.ts', '*.config.js']
+      }
+    },
     server: {
       // HMR is disabled in AI Studio via DISABLE_HMR env var.
-      // Do not modifyâfile watching is disabled to prevent flickering during agent edits.
+      // Do not modify—file watching is disabled to prevent flickering during agent edits.
       hmr: process.env.DISABLE_HMR !== 'true',
       // Disable file watching when DISABLE_HMR is true to save CPU during agent edits.
       watch: process.env.DISABLE_HMR === 'true' ? null : {},
