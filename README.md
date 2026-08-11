@@ -2,147 +2,130 @@
   <img src="assets/logo.png" width="160" alt="OpenApply Logo" />
 </p>
 
-# OpenApply 🛡️
+<h1 align="center">OpenApply 🛡️</h1>
 
-> **The Open-Source, Privacy-First LinkedIn Copilot & Automated State Unemployment Work-Search Engine**
+<p align="center">
+  <strong>The Free, Open-Source, Privacy-First LinkedIn Copilot & State Unemployment Work-Search Engine</strong>
+</p>
 
-[![Version](https://img.shields.io/badge/version-0.0.1-emerald.svg)](VERSION)
-[![License: GPL-3.0](https://img.shields.io/badge/License-GPL--3.0-blue.svg)](LICENSE)
-[![Manifest V3](https://img.shields.io/badge/Extension-Manifest%20V3-purple.svg)](apps/extension)
-[![Documentation](https://img.shields.io/badge/Docs-VitePress-green.svg)](apps/docs)
-[![Buy Me A Coffee](https://img.shields.io/badge/Buy%20Me%20A%20Coffee-Donate-yellow.svg?logo=buy-me-a-coffee)](https://www.buymeacoffee.com/olakra)
-
-OpenApply is a client-side browser extension designed for modern job seekers. It filters deceptive LinkedIn job listings, scores ATS resume matches using customizable recruiter personas, generates tailored 3-paragraph cover letters using your own API keys, and automatically logs audit-proof work-search proof for state unemployment benefits (CA EDD, TX TWC, NY DOL) directly into your private Google Sheets.
-
----
-
-## 🔒 Privacy-First BYOK Architecture
-
-OpenApply operates under a strict **Bring Your Own Key (BYOK)** model. 
-
-* **Zero Data Retention**: Your resume, personal contact information, API keys, and job search history are **never** transmitted to remote tracking servers or stored externally.
-* **AES-256 Web Crypto Vault**: Your OpenAI or Gemini API keys are encrypted locally inside your browser (`chrome.storage.local`) using PBKDF2 key derivation and AES-256-GCM encryption.
-* **Direct Provider Fetch**: LLM requests travel directly from your extension to `https://api.openai.com/v1/chat/completions`.
-* **PII Guardrails**: `PIIGuardrailService` automatically redacts SSNs, credit cards, phone numbers, and API tokens client-side before sending payloads to LLMs.
+<p align="center">
+  <a href="LICENSE"><img src="https://img.shields.io/badge/License-GPLv3-blue.svg" alt="License: GPL v3" /></a>
+  <a href="apps/extension"><img src="https://img.shields.io/badge/Chrome_Extension-Manifest_V3-green.svg" alt="Manifest V3" /></a>
+  <a href="https://sonarcloud.io/summary/new_code?id=olakra_openapply"><img src="https://sonarcloud.io/api/project_badges/measure?project=olakra_openapply&metric=alert_status" alt="SonarCloud Quality Gate" /></a>
+  <a href="https://sonarcloud.io/summary/new_code?id=olakra_openapply"><img src="https://sonarcloud.io/api/project_badges/measure?project=olakra_openapply&metric=security_rating" alt="SonarCloud Security Rating" /></a>
+  <a href="https://github.com/olakra/openapply/actions/workflows/sonarcloud.yml"><img src="https://github.com/olakra/openapply/actions/workflows/sonarcloud.yml/badge.svg" alt="SonarCloud CI Status" /></a>
+  <a href="https://github.com/olakra/openapply/actions/workflows/version-release-sync.yml"><img src="https://github.com/olakra/openapply/actions/workflows/version-release-sync.yml/badge.svg" alt="Release Sync Status" /></a>
+  <a href="package.json"><img src="https://img.shields.io/badge/TypeScript-5.x-blue?logo=typescript" alt="TypeScript 5.x" /></a>
+  <a href="https://www.buymeacoffee.com/olakra"><img src="https://img.shields.io/badge/Buy%20Me%20A%20Coffee-Donate-orange.svg?logo=buy-me-a-coffee" alt="Buy Me A Coffee" /></a>
+</p>
 
 ---
 
-## ✨ Core Feature Highlights
+## 🎯 Value Proposition & Core Features
 
-### 🎯 Deceptive Job & Applicant Filtering
-* **Promoted Listing Dimming**: Visual opacity reduction on sponsored LinkedIn job listings.
-* **Applicant Threshold Warnings**: Custom limit toggles (e.g., >50 applicants) to visually flag saturated job postings.
-* **Fake Remote Detection**: Regex and AI analysis flagging hidden hybrid clauses (e.g., *"Must reside within 30 miles of office"*).
+OpenApply is a 100% open-source, client-side Chromium extension built for modern job seekers. It eliminates LinkedIn noise, calculates ATS resume fit scores, generates custom 3-paragraph cover letters using your own LLM provider keys, and logs audit-proof job search records directly into your personal Google Sheet for state unemployment compliance (CA EDD, TX TWC, NY DOL).
 
-### 📝 1-Click ATS Fit Scorecards & Cover Letters
-* **Multi-Persona Evaluation**: Toggle evaluation perspectives between Technical Recruiter, Engineering Manager, Tech Lead, or VP of Engineering.
-* **Externalized Prompt Templates**: Prompt files are stored as plain Markdown in `/config/prompts/` and can be edited without code re-compilation.
-* **High-Impact Cover Letters**: Generates crisp, 3-paragraph tailored cover letters adhering to strict 250-word bounds.
-
-### 📊 Automated State Unemployment Compliance Log
-* **Cryptographic Audit Hashes**: Generates unique SHA-256 confirmation hashes for every logged application to prevent record tampering.
-* **Direct Google Sheets OAuth Export**: Uses minimal Google OAuth scopes to append work-search records directly into a private spreadsheet (`OpenApply_Unemployment_Log_2026`) in your Google Drive.
+- **🔒 100% Client-Side Privacy**: Your resume, personal contact details, API keys, and job application history are processed entirely in-browser. Zero personal data ever hits remote servers or central tracking databases.
+- **⚡ Zero Compute Markup (BYOK)**: Connect your own OpenAI or Gemini API key directly. Pay raw API pricing fractions of a cent per application without subscription markups.
+- **🚫 Deceptive & Ghost Job Filtering**: Injects DOM filters directly into `linkedin.com/jobs/*` to dim promoted listings, flag positions exceeding applicant limits (>100 applicants), and highlight hidden hybrid/onsite requirements.
+- **📊 State Unemployment Compliance Engine**: Automatically computes cryptographic SHA-256 confirmation hashes per application and appends formatted audit rows to a private Google Sheet (`OpenApply_Unemployment_Log_2026`).
 
 ---
 
-## 📁 Monorepo Directory Layout
+## 🔒 Trust, Security & Engineering Quality
+
+We maintain enterprise-grade security standards to ensure full transparency and complete trust for external contributors and users alike.
+
+### 🛡️ Privacy & Local Secret Protection
+- **AES-256 Web Crypto Vault**: All sensitive credentials (`sk-...` keys and Google OAuth tokens) are derived with PBKDF2 (100,000 hashing iterations) and encrypted locally in browser `chrome.storage.local`.
+- **Zero Central Telemetry**: OpenApply does not maintain any backend API proxy or data collection servers. All network calls execute directly from your client browser to official endpoints (`api.openai.com` or `googleapis.com`).
+
+### 🧪 Automated Code Quality & Vulnerability Scanning
+- **SonarCloud Analysis**: Continuous static code analysis monitors for XSS vulnerabilities, cognitive code complexity, security hotspots, and zero code smells across all monorepo workspaces.
+- **Secret & Dependency Scanning**: Repositories are scanned automatically with TruffleHog and GitHub Dependabot to prevent API key leaks and vulnerable package inclusions.
+- **Signed Commits & Git Flow**: All commits across release branches are cryptographically signed using GPG (`git commit -S`) and verified against GitHub maintainer identities.
+
+---
+
+## 📁 Monorepo Workspace Structure
 
 ```
 openapply/
-├── VERSION                         # Plain text semantic version (e.g. 0.0.1)
-├── CHANGELOG.md                    # Keep a Changelog standards log
-├── README.md                       # Main repository documentation
-├── config/
-│   └── prompts/                    # Externalized Markdown prompt templates
-│       ├── ats_analyzer.md
-│       ├── cover_letter_generator.md
-│       └── fake_remote_detector.md
 ├── apps/
-│   ├── extension/                  # Chromium Manifest V3 React/Vite extension
+│   ├── extension/            # Chromium Manifest V3 React 19 Extension
 │   │   ├── src/
-│   │   ├── manifest.json
-│   │   └── vite.config.ts
-│   └── docs/                       # VitePress SaaS marketing & documentation portal
-│       ├── .vitepress/
-│       ├── index.md
-│       ├── roadmap.md
-│       ├── releases.md
-│       └── guide/
+│   │   │   ├── background/   # MV3 Service Worker for BYOK & OAuth listeners
+│   │   │   ├── content/      # LinkedIn DOM parser & visual overlay filter
+│   │   │   └── popup/        # Real-time Extension popup settings UI
+│   │   └── manifest.json     # Chrome Extension MV3 Manifest
+│   └── docs/                 # VitePress documentation portal & marketing site
 ├── packages/
-│   ├── prompt-engine/              # Shared prompt parsing & interpolation logic
-│   └── shared-types/               # Global TypeScript interfaces & schemas
-└── .github/
-    └── workflows/
-        ├── deploy-docs.yml         # Deploy documentation to GitHub Pages
-        └── version-release-sync.yml # Auto-tag and publish GitHub releases
+│   ├── shared-types/         # Common TypeScript interfaces & schemas
+│   └── prompt-engine/        # Markdown ATS & cover letter prompt interpolator
+├── .github/
+│   ├── workflows/            # GitHub Actions (SonarCloud, Docs Deploy, Releases)
+│   └── FUNDING.yml           # Open-source sponsorship config
+├── sonar-project.properties  # SonarCloud static analysis rules & path scoping
+└── package.json              # Monorepo root configuration & scripts
 ```
 
 ---
 
-## 🛠️ Local Setup & Development
+## 🚀 Local Development Quickstart
 
 ### Prerequisites
-* **Node.js**: `v20.0.0` or higher
-* **Package Manager**: `npm` or `bun`
+- Node.js `^20.0.0` or `^22.0.0`
+- `npm` `^10.0.0`
 
-### Installation Steps
-
+### 1. Clone & Install Dependencies
 ```bash
-# 1. Clone the repository
 git clone https://github.com/olakra/openapply.git
 cd openapply
-
-# 2. Install workspace dependencies
 npm install
-
-# 3. Build all workspace packages
-npm run build
-
-# 4. Run Vite dev server for web preview
-npm run dev
 ```
 
-### Loading Extension in Chrome / Brave / Edge
+### 2. Run Local Development Web Sandbox
+```bash
+npm run dev
+```
+Open [http://localhost:3000](http://localhost:3000) in your browser to interact with the simulated LinkedIn DOM overlay engine and Extension Popup UI workbench.
 
-1. Build the extension package:
-   ```bash
-   npm run build:extension
-   ```
-2. Open Chrome and navigate to `chrome://extensions`.
-3. Enable **Developer mode** in the top right corner.
-4. Click **Load unpacked** and select the directory `/apps/extension/dist`.
-5. Open the OpenApply toolbar icon and input your OpenAI API key!
+### 3. Build & Test Extension Package
+```bash
+# Build Manifest V3 extension bundle
+npm run build:extension
 
----
+# Run workspace linters & type checks
+npm run lint
 
-## 🌿 Git Flow Guidelines
+# Run unit tests with coverage report
+npm run test:coverage
+```
 
-OpenApply adheres to standard Git Flow branch naming and pull request workflows:
-
-* `main`: Production-ready, stable releases.
-* `feature/<short-description>`: New features or enhancement PRs.
-* `fix/<short-description>`: Bug fixes and security patches.
-* `docs/<short-description>`: Documentation additions and guide updates.
-
-### Submitting a Pull Request
-1. Fork the repo and create your feature branch from `main`.
-2. Run `npm run lint` and verify all TypeScript checks pass cleanly.
-3. Keep commit messages clear and imperative (e.g., `feat(prompt-engine): add Claude 3.5 support`).
+### 4. Load Unpacked Extension into Chrome / Brave / Edge
+1. Open your browser and navigate to `chrome://extensions/`
+2. Enable **Developer mode** in the top right corner.
+3. Click **Load unpacked** and select the directory `apps/extension/dist` (or `apps/extension`).
+4. Navigate to `https://www.linkedin.com/jobs/` to see OpenApply's floating action bar.
 
 ---
 
-## 💖 Sponsor & Support
+## 🤝 Community, Contributing & Sponsorship
 
-OpenApply is 100% free, privacy-first, and community-funded software licensed under GPL-3.0. If OpenApply saved you hours of job search frustration or kept your unemployment benefits compliant, consider backing the maintainers:
+We welcome contributions from open-source maintainers, frontend engineers, and security auditors!
 
-[![Buy Me A Coffee](https://img.shields.io/badge/Buy%20Me%20A%20Coffee-Donate-yellow.svg?style=for-the-badge&logo=buy-me-a-coffee&logoColor=black)](https://www.buymeacoffee.com/olakra)
-
-* ☕ **Buy Me a Coffee**: [buymeacoffee.com/olakra](https://www.buymeacoffee.com/olakra)
-* ❤️ **Patreon**: [patreon.com/olakra](https://www.patreon.com/olakra)
-* ⭐ **GitHub Repository**: [olakra/openapply](https://github.com/olakra/openapply)
+- **Git Flow Standard**: Create feature branches off `develop` (`feature/your-feature-name`) and ensure commits are signed (`git commit -S`).
+- **Issues & Discussions**: Submit bug reports, feature requests, or security disclosures on our [GitHub Issues](https://github.com/olakra/openapply/issues) page.
+- **Sponsor OpenApply**: Support our independent open-source maintenance:
+  - ☕ **Buy Me A Coffee**: [buymeacoffee.com/olakra](https://www.buymeacoffee.com/olakra)
+  - 💖 **Patreon**: [patreon.com/olakra](https://www.patreon.com/olakra)
 
 ---
 
 ## 📄 License
 
-OpenApply is licensed under the **GNU General Public License v3.0 (GPL-3.0)**.
+This project is licensed under the **GNU General Public License v3.0 (GPL-3.0)** - see the [LICENSE](LICENSE) file for details.
+
+<p align="center">
+  <sub>Made with ❤️ in Seattle for job seekers everywhere.</sub>
+</p>
