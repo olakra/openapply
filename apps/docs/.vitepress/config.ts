@@ -1,21 +1,21 @@
 import { defineConfig } from 'vitepress';
 
 export default defineConfig({
-  base: '/openapply/',
+  base: '/OpenApply/',
   title: 'OpenApply',
   description: 'The Open-Source, Privacy-First LinkedIn Copilot & Unemployment Log Engine',
   lang: 'en-US',
   cleanUrls: true,
   appearance: 'dark',
   head: [
-    ['link', { rel: 'icon', type: 'image/png', href: '/openapply/logo.png' }],
+    ['link', { rel: 'icon', type: 'image/png', href: '/OpenApply/logo.png' }],
     ['meta', { name: 'theme-color', content: '#059669' }],
     ['meta', { property: 'og:type', content: 'website' }],
     ['meta', { property: 'og:locale', content: 'en_US' }],
     ['meta', { property: 'og:title', content: 'OpenApply | Privacy-First LinkedIn Copilot & Work-Search Log' }],
     ['meta', { property: 'og:site_name', content: 'OpenApply' }],
-    ['meta', { property: 'og:url', content: 'https://olakra.github.io/openapply/' }],
-    ['meta', { property: 'og:image', content: 'https://olakra.github.io/openapply/logo.png' }],
+    ['meta', { property: 'og:url', content: 'https://olakra.github.io/OpenApply/' }],
+    ['meta', { property: 'og:image', content: 'https://olakra.github.io/OpenApply/logo.png' }],
     ['meta', { name: 'twitter:card', content: 'summary_large_image' }],
     ['meta', { name: 'twitter:site', content: '@openapply' }],
 
