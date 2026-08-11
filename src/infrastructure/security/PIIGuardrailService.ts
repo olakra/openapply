@@ -1,5 +1,8 @@
 import { PIISanitizationResult } from '../../core/domain/Entities';
 
+/**
+ * Service for detecting, masking, and auditing Personally Identifiable Information (PII).
+ */
 export class PIIGuardrailService {
   private static PII_PATTERNS = [
     {
@@ -26,6 +29,8 @@ export class PIIGuardrailService {
 
   /**
    * Pre-hook check before sending text to AI or saving to storage.
+   * @param text - Input text string to sanitize
+   * @returns Sanitization audit result object
    */
   public static sanitize(text: string): PIISanitizationResult {
     let sanitizedText = text;
@@ -47,6 +52,8 @@ export class PIIGuardrailService {
 
   /**
    * Pre-commit hook to verify no secret tokens are leaked in commit payloads.
+   * @param payload - Commit payload object
+   * @returns Security audit clean state and warnings list
    */
   public static preCommitCheck(payload: Record<string, any>): { isClean: boolean; warnings: string[] } {
     const warnings: string[] = [];

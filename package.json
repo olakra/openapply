@@ -19,7 +19,10 @@
     "build:docs": "vitepress build apps/docs",
     "preview": "vite preview",
     "clean": "rm -rf dist apps/*/dist packages/*/dist",
-    "lint": "tsc --noEmit",
+    "lint": "eslint . && tsc --noEmit && node scripts/validate-documentation.js",
+    "lint:docs": "node scripts/validate-documentation.js",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
     "test": "vitest run",
     "test:coverage": "vitest run --coverage"
   },
@@ -42,10 +45,14 @@
     "@vitest/coverage-v8": "^4.1.10",
     "autoprefixer": "^10.4.21",
     "esbuild": "^0.25.0",
+    "eslint": "^10.8.1",
+    "eslint-config-prettier": "^10.1.8",
     "jsdom": "^29.1.1",
+    "prettier": "^3.9.6",
     "tailwindcss": "^4.1.14",
     "tsx": "^4.21.0",
     "typescript": "~5.8.2",
+    "typescript-eslint": "^8.67.0",
     "vitepress": "^1.6.4",
     "vitest": "^4.1.10"
   }

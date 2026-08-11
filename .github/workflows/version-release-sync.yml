@@ -84,8 +84,8 @@ jobs:
         if: steps.check_tag.outputs.TAG_EXISTS == 'false'
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: "v${{ steps.get_version.outputs.CURRENT_VERSION }}"
-          name: "OpenApply v${{ steps.get_version.outputs.CURRENT_VERSION }}"
+          tag_name: 'v${{ steps.get_version.outputs.CURRENT_VERSION }}'
+          name: 'OpenApply v${{ steps.get_version.outputs.CURRENT_VERSION }}'
           body_path: release_notes.md
           draft: false
           prerelease: false

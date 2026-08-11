@@ -2,9 +2,9 @@
 layout: home
 
 hero:
-  name: "OpenApply"
-  text: "The Open-Source, Privacy-First LinkedIn Copilot"
-  tagline: "Filter ghost jobs, generate tailored ATS cover letters using your own API keys, and automatically track state unemployment work-search logs—100% locally."
+  name: 'OpenApply'
+  text: 'The Open-Source, Privacy-First LinkedIn Copilot'
+  tagline: 'Filter ghost jobs, generate tailored ATS cover letters using your own API keys, and automatically track state unemployment work-search logs—100% locally.'
   image:
     src: /logo.png
     alt: OpenApply Logo
@@ -14,7 +14,7 @@ hero:
       link: /guide/installation
     - theme: alt
       text: Join Waitlist & Updates
-      link: "#waitlist"
+      link: '#waitlist'
     - theme: alt
       text: View GitHub Repo
       link: https://github.com/olakra/openapply

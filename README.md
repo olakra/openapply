@@ -37,10 +37,12 @@ OpenApply is a 100% open-source, client-side Chromium extension built for modern
 We maintain enterprise-grade security standards to ensure full transparency and complete trust for external contributors and users alike.
 
 ### 🛡️ Privacy & Local Secret Protection
+
 - **AES-256 Web Crypto Vault**: All sensitive credentials (`sk-...` keys and Google OAuth tokens) are derived with PBKDF2 (100,000 hashing iterations) and encrypted locally in browser `chrome.storage.local`.
 - **Zero Central Telemetry**: OpenApply does not maintain any backend API proxy or data collection servers. All network calls execute directly from your client browser to official endpoints (`api.openai.com` or `googleapis.com`).
 
 ### 🧪 Automated Code Quality & Vulnerability Scanning
+
 - **SonarCloud Analysis**: Continuous static code analysis monitors for XSS vulnerabilities, cognitive code complexity, security hotspots, and zero code smells across all monorepo workspaces.
 - **Secret & Dependency Scanning**: Repositories are scanned automatically with TruffleHog and GitHub Dependabot to prevent API key leaks and vulnerable package inclusions.
 - **Signed Commits & Git Flow**: All commits across release branches are cryptographically signed using GPG (`git commit -S`) and verified against GitHub maintainer identities.
@@ -74,10 +76,12 @@ openapply/
 ## 🚀 Local Development Quickstart
 
 ### Prerequisites
+
 - Node.js `^20.0.0` or `^22.0.0`
 - `npm` `^10.0.0`
 
 ### 1. Clone & Install Dependencies
+
 ```bash
 git clone https://github.com/olakra/openapply.git
 cd openapply
@@ -85,12 +89,15 @@ npm install
 ```
 
 ### 2. Run Local Development Web Sandbox
+
 ```bash
 npm run dev
 ```
+
 Open [http://localhost:3000](http://localhost:3000) in your browser to interact with the simulated LinkedIn DOM overlay engine and Extension Popup UI workbench.
 
 ### 3. Build & Test Extension Package
+
 ```bash
 # Build Manifest V3 extension bundle
 npm run build:extension
@@ -103,6 +110,7 @@ npm run test:coverage
 ```
 
 ### 4. Load Unpacked Extension into Chrome / Brave / Edge
+
 1. Open your browser and navigate to `chrome://extensions/`
 2. Enable **Developer mode** in the top right corner.
 3. Click **Load unpacked** and select the directory `apps/extension/dist` (or `apps/extension`).

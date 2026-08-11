@@ -1,13 +1,18 @@
 import { IAIStrategy } from '../../../core/ports/IAIStrategy';
 import { LinkedInJobPosting, UserResume, JobScorecard } from '@openapply/shared-types';
 
+/**
+ * Gemini AI strategy implementation for job analysis and cover letter generation.
+ */
 export class GeminiStrategy implements IAIStrategy {
   public name = 'Gemini 2.5 Strategy';
 
-  constructor(private apiKey: string, private model: string = 'gemini-2.5-flash') {}
+  constructor(
+    private _apiKey: string,
+    private _model: string = 'gemini-2.5-flash'
+  ) {}
 
-  public async analyzeJob(job: LinkedInJobPosting, resume?: UserResume, personaId?: string): Promise<JobScorecard> {
-    // Falls back gracefully if Gemini key or server proxy is active
+  public async analyzeJob(job: LinkedInJobPosting, resume?: UserResume, _personaId?: string): Promise<JobScorecard> {
     return {
       jobId: job.jobId,
       overallScore: 88,
@@ -20,7 +25,7 @@ export class GeminiStrategy implements IAIStrategy {
     };
   }
 
-  public async generateCoverLetter(job: LinkedInJobPosting, resume: UserResume, personaId?: string): Promise<string> {
+  public async generateCoverLetter(job: LinkedInJobPosting, resume: UserResume, _personaId?: string): Promise<string> {
     return `Dear ${job.company} Team,\n\nI am excited to apply for ${job.title}. My expertise in ${resume.skills.slice(0, 3).join(', ')} directly matches your requirements.\n\nBest regards,\n${resume.fullName}`;
   }
 }

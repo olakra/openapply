@@ -5,6 +5,9 @@
 
 import { LinkedInJobPosting, UserResume } from '@openapply/shared-types';
 
+/**
+ * Persona evaluation role configuration definition.
+ */
 export interface PersonaConfig {
   id: string;
   title: string;
@@ -12,6 +15,9 @@ export interface PersonaConfig {
   tone: string;
 }
 
+/**
+ * Default pre-configured evaluator personas.
+ */
 export const DEFAULT_PERSONAS: Record<string, PersonaConfig> = {
   recruiter: {
     id: 'recruiter',
@@ -39,10 +45,16 @@ export const DEFAULT_PERSONAS: Record<string, PersonaConfig> = {
   }
 };
 
+/**
+ * Standard PII privacy enforcement rules inserted into AI system prompts.
+ */
 export const DEFAULT_PII_RULES = `1. Zero Raw Token Leakage: Never echo or include raw API keys or secrets in output.
 2. PII Sanitization: Automatically mask SSNs, phone numbers, exact street addresses, or credit cards.
 3. Client BYOK Privacy: Data processed exclusively through designated endpoint.`;
 
+/**
+ * Core Markdown prompt template structures.
+ */
 export const RAW_MARKDOWN_TEMPLATES = {
   ATS_ANALYZER: `# OpenApply ATS Scorecard Prompt Template
 
@@ -133,6 +145,9 @@ Respond strictly in JSON format:
 }`
 };
 
+/**
+ * Dynamic Prompt Template Engine for persona interpolation and markdown prompts.
+ */
 export class PromptTemplateEngine {
   private templates: Map<string, string>;
   private personas: Map<string, PersonaConfig>;
@@ -185,28 +200,32 @@ export class PromptTemplateEngine {
       'persona.title': persona.title,
       'persona.description': persona.description,
       'persona.tone': persona.tone,
-      'pii_rules': this.piiRules,
+      pii_rules: this.piiRules,
       'job.title': job.title,
       'job.company': job.company,
       'job.location': job.location,
       'job.isRemote': String(job.isRemote),
       'job.description': job.description,
-      'resume_section': resumeSection
+      resume_section: resumeSection
     });
   }
 
-  public renderCoverLetterPrompt(job: LinkedInJobPosting, resume: UserResume, personaId: string = 'hiring_manager'): string {
+  public renderCoverLetterPrompt(
+    job: LinkedInJobPosting,
+    resume: UserResume,
+    personaId: string = 'hiring_manager'
+  ): string {
     const template = this.getTemplate('cover_letter');
     const persona = this.getPersona(personaId);
 
     const workHistoryStr = resume.workHistory
-      .map(w => `- ${w.role} at ${w.company}: ${w.highlights.join('; ')}`)
+      .map((w) => `- ${w.role} at ${w.company}: ${w.highlights.join('; ')}`)
       .join('\n');
 
     return this.interpolate(template, {
       'persona.title': persona.title,
       'persona.tone': persona.tone,
-      'pii_rules': this.piiRules,
+      pii_rules: this.piiRules,
       'job.title': job.title,
       'job.company': job.company,
       'job.description': job.description.slice(0, 1500),
@@ -237,24 +256,45 @@ export class PromptTemplateEngine {
   }
 }
 
-// Global Singleton Instance
+/**
+ * Global singleton prompt engine instance.
+ */
 export const promptEngine = new PromptTemplateEngine();
 
-// Backward compatibility legacy functions
+/**
+ * Legacy system instruction prompts for backward compatibility.
+ */
 export const SYSTEM_INSTRUCTIONS = {
   ATS_ANALYZER: `You are OpenApply's ATS Engine. Analyze job posting & resume. Return JSON format.`,
   COVER_LETTER_GENERATOR: `You are an expert career agent writing a 3-paragraph cover letter.`,
   FAKE_REMOTE_DETECTOR: `You are a job posting auditor detecting fake remote jobs.`
 };
 
+/**
+ * Renders ATS scorecard evaluation prompt text.
+ * @param job - Job listing object
+ * @param resume - Optional user resume profile
+ * @returns Formatted markdown prompt string
+ */
 export function generateAtsScorecardPrompt(job: LinkedInJobPosting, resume?: UserResume): string {
   return promptEngine.renderAtsPrompt(job, resume);
 }
 
+/**
+ * Renders cover letter generation prompt text.
+ * @param job - Target job listing object
+ * @param resume - User resume profile
+ * @returns Formatted markdown prompt string
+ */
 export function generateCoverLetterPrompt(job: LinkedInJobPosting, resume: UserResume): string {
   return promptEngine.renderCoverLetterPrompt(job, resume);
 }
 
+/**
+ * Renders fake remote auditing prompt text.
+ * @param job - Target job listing object
+ * @returns Formatted markdown prompt string
+ */
 export function generateFakeRemoteDetectionPrompt(job: LinkedInJobPosting): string {
   return promptEngine.renderFakeRemotePrompt(job);
 }

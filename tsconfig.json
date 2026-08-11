@@ -4,11 +4,7 @@
     "experimentalDecorators": true,
     "useDefineForClassFields": false,
     "module": "ESNext",
-    "lib": [
-      "ES2022",
-      "DOM",
-      "DOM.Iterable"
-    ],
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
     "skipLibCheck": true,
     "types": ["chrome", "node"],
     "moduleResolution": "bundler",
@@ -17,15 +13,9 @@
     "allowJs": true,
     "jsx": "react-jsx",
     "paths": {
-      "@/*": [
-        "./*"
-      ],
-      "@openapply/shared-types": [
-        "./packages/shared-types/index.ts"
-      ],
-      "@openapply/prompt-engine": [
-        "./packages/prompt-engine/index.ts"
-      ]
+      "@/*": ["./*"],
+      "@openapply/shared-types": ["./packages/shared-types/index.ts"],
+      "@openapply/prompt-engine": ["./packages/prompt-engine/index.ts"]
     },
     "allowImportingTsExtensions": true,
     "noEmit": true

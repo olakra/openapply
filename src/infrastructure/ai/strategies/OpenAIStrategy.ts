@@ -2,25 +2,33 @@ import { IAIStrategy } from '../../../core/ports/IAIStrategy';
 import { LinkedInJobPosting, UserResume, JobScorecard } from '@openapply/shared-types';
 import { promptEngine } from '@openapply/prompt-engine';
 
+/**
+ * OpenAI BYOK Strategy implementation for client-side direct API integration.
+ */
 export class OpenAIStrategy implements IAIStrategy {
   public name = 'OpenAI BYOK Strategy';
 
-  constructor(private apiKey: string, private model: string = 'gpt-4o-mini') {}
+  constructor(
+    private apiKey: string,
+    private model: string = 'gpt-4o-mini'
+  ) {}
 
-  public async analyzeJob(job: LinkedInJobPosting, resume?: UserResume, personaId: string = 'recruiter'): Promise<JobScorecard> {
+  public async analyzeJob(
+    job: LinkedInJobPosting,
+    resume?: UserResume,
+    personaId: string = 'recruiter'
+  ): Promise<JobScorecard> {
     const promptText = promptEngine.renderAtsPrompt(job, resume, personaId);
 
     const response = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${this.apiKey}`
+        Authorization: `Bearer ${this.apiKey}`
       },
       body: JSON.stringify({
         model: this.model,
-        messages: [
-          { role: 'user', content: promptText }
-        ],
+        messages: [{ role: 'user', content: promptText }],
         response_format: { type: 'json_object' },
         temperature: 0.2
       })
@@ -45,20 +53,22 @@ export class OpenAIStrategy implements IAIStrategy {
     };
   }
 
-  public async generateCoverLetter(job: LinkedInJobPosting, resume: UserResume, personaId: string = 'hiring_manager'): Promise<string> {
+  public async generateCoverLetter(
+    job: LinkedInJobPosting,
+    resume: UserResume,
+    personaId: string = 'hiring_manager'
+  ): Promise<string> {
     const promptText = promptEngine.renderCoverLetterPrompt(job, resume, personaId);
 
     const response = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${this.apiKey}`
+        Authorization: `Bearer ${this.apiKey}`
       },
       body: JSON.stringify({
         model: this.model,
-        messages: [
-          { role: 'user', content: promptText }
-        ],
+        messages: [{ role: 'user', content: promptText }],
         temperature: 0.7
       })
     });
