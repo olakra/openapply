@@ -15,7 +15,7 @@
   "scripts": {
     "dev": "vite --port=3000 --host=0.0.0.0",
     "build": "vite build",
-    "build:extension": "vite build --config apps/extension/vite.config.ts",
+    "build:extension": "vite build",
     "build:docs": "vitepress build apps/docs",
     "preview": "vite preview",
     "clean": "rm -rf dist apps/*/dist packages/*/dist",
