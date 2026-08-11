@@ -36,10 +36,10 @@ jobs:
         run: npm ci
 
       - name: Run Monorepo Linter
-        run: npm run lint --if-present
+        run: npm run lint
 
       - name: Run Tests with Coverage
-        run: npm run test:coverage --if-present
+        run: npm run test:coverage
 
       - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@master
